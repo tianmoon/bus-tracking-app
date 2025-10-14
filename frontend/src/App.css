@@ -54,6 +54,13 @@ input, select {
 }
 
 .bus-image img {
-  max-width: 80%;
+  max-width: 50%;
   height: auto;
+  display: block;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
