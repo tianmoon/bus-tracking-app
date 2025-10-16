@@ -166,3 +166,27 @@
 .quick-actions .green { background-color: #27ae60; }
 .quick-actions .purple { background-color: #8e44ad; }
 .quick-actions .orange { background-color: #e67e22; }
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .stats,
+  .tracking-alerts,
+  .quick-actions {
+    flex-direction: column;
+  }
+
+  .stat-box,
+  .gps-tracking,
+  .alerts,
+  .quick-actions button {
+    width: 100%;
+  }
+}
