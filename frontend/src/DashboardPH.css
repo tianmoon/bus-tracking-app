@@ -1,0 +1,241 @@
+/* Tổng thể */
+.ph-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f9fafc;
+  font-family: "Inter", sans-serif;
+}
+
+/* Sidebar */
+.ph-sidebar {
+  width: 230px;
+  background-color: #1e3a8a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.ph-logo {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.ph-logo-icon {
+  font-size: 40px;
+  color: #93c5fd;
+}
+
+.ph-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.ph-menu li {
+  padding: 12px 10px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.ph-menu li.active,
+.ph-menu li:hover {
+  background-color: #2563eb;
+}
+
+/* Main content */
+.ph-main {
+  flex: 1;
+  padding: 20px 35px;
+  overflow-y: auto;
+}
+
+/* Header */
+.ph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.ph-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.ph-avatar {
+  font-size: 35px;
+  color: #1e3a8a;
+}
+
+/* Nội dung chính */
+.ph-content {
+  display: flex;
+  margin-top: 20px;
+  gap: 25px;
+}
+
+/* Cards */
+.ph-info-cards {
+  display: flex;
+  flex: 2;
+  gap: 15px;
+}
+
+.ph-card {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+}
+
+.ph-card h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.ph-card.green {
+  border-left: 4px solid #10b981;
+}
+
+.ph-card.yellow {
+  border-left: 4px solid #f59e0b;
+}
+
+.ph-card.blue {
+  border-left: 4px solid #3b82f6;
+}
+
+.ph-status {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.ph-delay {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.ph-follow {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* Bản đồ */
+.ph-map-section {
+  flex: 2;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.ph-map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ph-fullscreen {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.ph-map-placeholder {
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  margin-top: 15px;
+}
+
+.ph-map-icon {
+  font-size: 40px;
+  color: #3b82f6;
+  margin-bottom: 10px;
+}
+
+/* Cột phải */
+.ph-right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Thông báo */
+.ph-recent {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.ph-notice {
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ph-notice small {
+  display: block;
+  margin-left: 25px;
+  color: #6b7280;
+}
+
+.ph-notice.orange {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.ph-notice.blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.ph-notice.green {
+  background-color: #dcfce7;
+  color: #065f46;
+}
+
+/* Thông tin con em */
+.ph-child-info {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+}
+
+.ph-child-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ph-child-avatar {
+  font-size: 35px;
+  color: #1e3a8a;
+}
+
+.ph-active {
+  color: #10b981;
+  font-weight: 600;
+}

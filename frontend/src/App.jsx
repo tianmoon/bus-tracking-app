@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import './App.css';
 import busImage from './assets/schoolbus.png';
 import Dashboard from "./Dashboard";
+import DashboardPH from "./DashboardPH"; // Phụ huynh
+import DashboardTaixe from "./DashboardTaixe"; // Tài xế
 
 function LoginPage() {
   const [error, setError] = useState("");
@@ -19,19 +21,24 @@ function LoginPage() {
       (emailOrPhone === "admin" && password === "ADMIN" && role === "Admin") ||
       (emailOrPhone === "parent" && password === "PARENT" && role === "Phụ huynh") ||
       (emailOrPhone === "driver" && password === "DRIVER" && role === "Tài xế")
-    ) 
-    {
+    ) {
       setError("");
       alert("Đăng nhập thành công!");
-      navigate("/dashboard"); // Điều hướng đến Dashboard
-    } 
-    else 
-    {
+
+      // Điều hướng theo vai trò
+      if (role === "Admin") {
+        navigate("/dashboard");
+      } else if (role === "Tài xế") {
+        navigate("/dashboard-container");
+      } else if (role === "Phụ huynh") {
+        navigate("/ph-container");
+      }
+    } else {
       setError("Thông tin đăng nhập không chính xác.");
     }
   };
 
-  return (
+    return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleLogin}>
         <h2>Smart School Bus Tracking System</h2>
@@ -73,6 +80,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard-container" element={<DashboardTaixe />} />
+        <Route path="/ph-container" element={<DashboardPH />} />
       </Routes>
     </Router>
   );
