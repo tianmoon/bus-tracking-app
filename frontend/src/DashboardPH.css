@@ -239,3 +239,64 @@
   color: #10b981;
   font-weight: 600;
 }
+
+@media (max-width: 768px) {
+  .ph-container {
+    flex-direction: column;
+  }
+
+  .ph-sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+
+  .ph-logo {
+    margin-bottom: 0;
+  }
+
+  .ph-menu {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+  }
+
+  .ph-menu li {
+    white-space: nowrap;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .ph-main {
+    padding: 15px 20px;
+  }
+
+  .ph-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .ph-content {
+    flex-direction: column;
+  }
+
+  .ph-info-cards {
+    flex-direction: column;
+  }
+
+  .ph-map-section {
+    margin-top: 15px;
+  }
+
+  .ph-right-panel {
+    flex-direction: column;
+  }
+
+  .ph-child-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
