@@ -22,6 +22,7 @@ function App() {
         <Route path='/test' element={<Test/>}/>
         <Route path='/student-list-admin' element={<StudentListForAdmin/>}/>
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
+        <Route path='/alerts' element={<AlertManagement/>}/>
       </Routes>
     </div>
   )
