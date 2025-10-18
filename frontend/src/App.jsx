@@ -6,6 +6,8 @@ import Dashboard from './pages/DashboardAdmin/Dashboard'
 import DashboardTaixe from './pages/DashboardTX/DashboardTaixe'
 import DashboardPH from './pages/DashboardPH/DashboardPH'
 import Test from './pages/Test/Test'
+import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
+import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 
 function App() {
   return(
@@ -18,6 +20,8 @@ function App() {
         <Route path='/dashboard-container' element={<DashboardTaixe/>}/>
         <Route path='/ph-container' element={<DashboardPH/>}/>
         <Route path='/test' element={<Test/>}/>
+        <Route path='/student-list-admin' element={<StudentListForAdmin/>}/>
+        <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
       </Routes>
     </div>
   )
