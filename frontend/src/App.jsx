@@ -8,7 +8,7 @@ import DashboardPH from './pages/DashboardPH/DashboardPH'
 import Test from './pages/Test/Test'
 import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
-
+import AlertManagement from './pages/AlertManagement/AlertManagement'
 function App() {
   return(
     <div>
