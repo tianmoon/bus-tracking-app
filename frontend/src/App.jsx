@@ -8,6 +8,8 @@ import DashboardPH from './pages/DashboardPH/DashboardPH'
 import Test from './pages/Test/Test'
 import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
+import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
+import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
 
 function App() {
   return(
@@ -21,7 +23,9 @@ function App() {
         <Route path='/ph-container' element={<DashboardPH/>}/>
         <Route path='/test' element={<Test/>}/>
         <Route path='/student-list-admin' element={<StudentListForAdmin/>}/>
+        <Route path='/bus-list-admin' element={<BusListForAdmin/>}/>
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
+        <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
       </Routes>
     </div>
   )
