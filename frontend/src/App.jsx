@@ -10,7 +10,7 @@ import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
-
+import AlertManagement from './pages/AlertManagement/AlertManagement'
 function App() {
   return(
     <div>
@@ -26,6 +26,7 @@ function App() {
         <Route path='/bus-list-admin' element={<BusListForAdmin/>}/>
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
         <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
+        <Route path='/alerts' element={<AlertManagement/>}/>
       </Routes>
     </div>
   )
