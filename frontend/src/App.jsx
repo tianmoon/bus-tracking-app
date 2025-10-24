@@ -11,6 +11,7 @@ import StudentListForDriver from './pages/StudentListForDriver/StudentListForDri
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
 import AlertManagement from './pages/AlertManagement/AlertManagement'
+import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 function App() {
   return(
     <div>
@@ -27,6 +28,7 @@ function App() {
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
         <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
         <Route path='/alerts' element={<AlertManagement/>}/>
+        <Route path='/trip-report' element={<TripReportDriver/>}/>
       </Routes>
     </div>
   )
