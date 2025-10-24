@@ -4,6 +4,7 @@
   height: 100vh;
   background-color: #f8f9fb;
   font-family: "Inter", sans-serif;
+  gap: 40px;
 }
 
 /* Sidebar */
@@ -52,6 +53,7 @@
   flex: 1;
   padding: 20px 40px;
   overflow-y: auto;
+  margin-left: 20px;
 }
 
 /* Header */
