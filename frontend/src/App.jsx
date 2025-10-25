@@ -13,6 +13,8 @@ import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
 import AlertManagement from './pages/AlertManagement/AlertManagement'
 import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
+import MessageManagement from './pages/MessageManagement/MessageManagement'
+import ParentSettings from './pages/ParentSettings/ParentSettings'
 function App() {
   return(
     <div>
@@ -31,6 +33,8 @@ function App() {
         <Route path='/alerts' element={<AlertManagement/>}/>
         <Route path='/trip-report' element={<TripReportDriver/>}/>
         <Route path='/route-map' element={<RouteMapDriver/>}/>
+        <Route path='/messages' element={<MessageManagement/>}/>
+        <Route path='/parent-settings' element={<ParentSettings/>}/>
       </Routes>
     </div>
   )
