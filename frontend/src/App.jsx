@@ -10,7 +10,9 @@ import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
-
+import AlertManagement from './pages/AlertManagement/AlertManagement'
+import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
+import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
 function App() {
   return(
     <div>
@@ -26,6 +28,9 @@ function App() {
         <Route path='/bus-list-admin' element={<BusListForAdmin/>}/>
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
         <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
+        <Route path='/alerts' element={<AlertManagement/>}/>
+        <Route path='/trip-report' element={<TripReportDriver/>}/>
+        <Route path='/route-map' element={<RouteMapDriver/>}/>
       </Routes>
     </div>
   )

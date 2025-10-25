@@ -1,6 +1,13 @@
 import React from "react";
 import "./DashboardPH.css";
-import { FaBus, FaBell, FaUserCircle, FaRoute, FaClock, FaMapMarkedAlt } from "react-icons/fa";
+import {
+  FaBus,
+  FaBell,
+  FaUserCircle,
+  FaRoute,
+  FaClock,
+  FaMapMarkedAlt,
+} from "react-icons/fa";
 
 function DashboardPH() {
   return (
@@ -81,8 +88,7 @@ function DashboardPH() {
                 <small>16:40 - Đắc Lộ đường</small>
               </div>
               <div className="ph-notice blue">
-                <FaRoute /> Xe đã qua điểm dừng số 8
-                <small>16:35</small>
+                <FaRoute /> Xe đã qua điểm dừng số 8<small>16:35</small>
               </div>
               <div className="ph-notice green">
                 <FaBus /> Con em đã lên xe
@@ -95,14 +101,25 @@ function DashboardPH() {
               <div className="ph-child-card">
                 <FaUserCircle className="ph-child-avatar" />
                 <div>
-                  <p><b>Nguyễn Minh An</b></p>
+                  <p>
+                    <b>Nguyễn Minh An</b>
+                  </p>
                   <p>Lớp 8A2</p>
                 </div>
               </div>
-              <p><b>Trường:</b> THCS ABC</p>
-              <p><b>Tuyến xe:</b> Số 15</p>
-              <p><b>Điểm đón:</b> Ngã tư Bình Triệu</p>
-              <p><b>Trạng thái:</b> <span className="ph-active">Đang trên xe</span></p>
+              <p>
+                <b>Trường:</b> THCS ABC
+              </p>
+              <p>
+                <b>Tuyến xe:</b> Số 15
+              </p>
+              <p>
+                <b>Điểm đón:</b> Ngã tư Bình Triệu
+              </p>
+              <p>
+                <b>Trạng thái:</b>{" "}
+                <span className="ph-active">Đang trên xe</span>
+              </p>
             </div>
           </aside>
         </div>

@@ -1,6 +1,15 @@
 import React from "react";
 import "./DashboardTaixe.css";
-import { FaBus, FaUserCircle, FaMapMarkerAlt, FaExclamationTriangle, FaPhoneAlt, FaMapMarkedAlt, FaGasPump, FaVideo } from "react-icons/fa";
+import {
+  FaBus,
+  FaUserCircle,
+  FaMapMarkerAlt,
+  FaExclamationTriangle,
+  FaPhoneAlt,
+  FaMapMarkedAlt,
+  FaGasPump,
+  FaVideo,
+} from "react-icons/fa";
 
 function DashboardTaixe() {
   return (
@@ -94,25 +103,48 @@ function DashboardTaixe() {
             <div className="students-today">
               <h4>Học sinh hôm nay</h4>
               <ul>
-                <li><span>🧒 Trần Thị B</span> <small>Lớp 5A</small> ✅</li>
-                <li><span>🧑‍🎓 Lê Văn C</span> <small>Lớp 4B</small> ✅</li>
-                <li><span>👧 Phạm Thị D</span> <small>Lớp 3C</small> ⏳</li>
-                <li><span>👦 Hoàng Văn E</span> <small>Lớp 2A</small> ⏳</li>
+                <li>
+                  <span>🧒 Trần Thị B</span> <small>Lớp 5A</small> ✅
+                </li>
+                <li>
+                  <span>🧑‍🎓 Lê Văn C</span> <small>Lớp 4B</small> ✅
+                </li>
+                <li>
+                  <span>👧 Phạm Thị D</span> <small>Lớp 3C</small> ⏳
+                </li>
+                <li>
+                  <span>👦 Hoàng Văn E</span> <small>Lớp 2A</small> ⏳
+                </li>
               </ul>
-              <p className="summary">Tổng số: 10 học sinh | Đã đón: 3 học sinh</p>
+              <p className="summary">
+                Tổng số: 10 học sinh | Đã đón: 3 học sinh
+              </p>
             </div>
 
             <div className="quick-actions">
-              <button className="report"><FaExclamationTriangle /> Báo cáo sự cố</button>
-              <button className="contact"><FaPhoneAlt /> Liên hệ trường</button>
-              <button className="map"><FaMapMarkedAlt /> Xem bản đồ</button>
+              <button className="report">
+                <FaExclamationTriangle /> Báo cáo sự cố
+              </button>
+              <button className="contact">
+                <FaPhoneAlt /> Liên hệ quản lí
+              </button>
+              <button className="map">
+                <FaMapMarkedAlt /> Xem bản đồ
+              </button>
             </div>
 
             <div className="vehicle-status">
               <h4>Trạng thái xe</h4>
-              <p><FaGasPump /> Nhiên liệu: <b>80%</b></p>
-              <p><FaMapMarkerAlt /> GPS: <span className="active">Hoạt động</span></p>
-              <p><FaVideo /> Camera: <span className="active">Hoạt động</span></p>
+              <p>
+                <FaGasPump /> Nhiên liệu: <b>80%</b>
+              </p>
+              <p>
+                <FaMapMarkerAlt /> GPS:{" "}
+                <span className="active">Hoạt động</span>
+              </p>
+              <p>
+                <FaVideo /> Camera: <span className="active">Hoạt động</span>
+              </p>
             </div>
           </aside>
         </div>
