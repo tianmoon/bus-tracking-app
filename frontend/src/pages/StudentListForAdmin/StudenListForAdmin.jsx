@@ -92,6 +92,7 @@ function StudentListForAdmin() {
                                             <th className="px-6 py-4 text-left font-semibold">Id</th>
                                             <th className="px-6 py-4 text-left font-semibold">Tên</th>
                                             <th className="px-6 py-4 text-left font-semibold">Lớp</th>
+                                            <th className="px-6 py-4 text-left font-semibold">Phụ huynh</th>
                                             <th className="px-6 py-4 text-left font-semibold">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -101,6 +102,7 @@ function StudentListForAdmin() {
                                                 <td className="px-6 py-4">{student.id}</td>
                                                 <td className="px-6 py-4 font-medium">{student.name}</td>
                                                 <td className="px-6 py-4">{student.class}</td>
+                                                <td className="px-6 py-4">Nguyễn Thị B (Mẹ)</td>
                                                 <td className="px-6 py-4">
                                                     <button className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors">
                                                         Sửa

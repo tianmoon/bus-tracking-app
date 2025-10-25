@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
 import busImage from '../../assets/schoolbus.png';
-// import Dashboard from "./Dashboard";
-// import DashboardPH from "./DashboardPH"; // Phụ huynh
-// import DashboardTaixe from "./DashboardTaixe"; // Tài xế
+
 
 function Login() {
   const [error, setError] = useState("");
