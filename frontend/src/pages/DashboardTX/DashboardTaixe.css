@@ -4,6 +4,7 @@
   min-height: 100vh;
   background-color: #f8f9fb;
   font-family: "Inter", sans-serif;
+  gap: 40px;
 }
 
 /* Sidebar */
@@ -87,8 +88,6 @@
   margin-left: 280px; /* Bằng width của sidebar */
   padding: 30px 40px;
   overflow-y: auto;
-  min-height: 100vh;
-}
 
 /* Header */
 .header {
