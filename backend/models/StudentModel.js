@@ -38,11 +38,11 @@ class StudentModel {
   // Thêm học sinh mới
   static async create(studentData) {
     try {
-      const { name, grade } = studentData;
+      const { name, grade, parent_id, bus_id } = studentData;
 
       const [result] = await db.query(
-        'INSERT INTO student (name, grade) VALUES (?, ?)',
-        [name, grade]
+        'INSERT INTO student (name, grade, active, parent_id, bus_id) VALUES (?, ?, 1, ?, ?)',
+        [name, grade, parent_id, bus_id]
       );
 
       return {
