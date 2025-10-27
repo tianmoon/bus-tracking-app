@@ -8,7 +8,13 @@ import DashboardPH from './pages/DashboardPH/DashboardPH'
 import Test from './pages/Test/Test'
 import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
-
+import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
+import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
+import AlertManagement from './pages/AlertManagement/AlertManagement'
+import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
+import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
+import MessageManagement from './pages/MessageManagement/MessageManagement'
+import ParentSettings from './pages/ParentSettings/ParentSettings'
 function App() {
   return(
     <div>
@@ -21,7 +27,14 @@ function App() {
         <Route path='/ph-container' element={<DashboardPH/>}/>
         <Route path='/test' element={<Test/>}/>
         <Route path='/student-list-admin' element={<StudentListForAdmin/>}/>
+        <Route path='/bus-list-admin' element={<BusListForAdmin/>}/>
         <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
+        <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
+        <Route path='/alerts' element={<AlertManagement/>}/>
+        <Route path='/trip-report' element={<TripReportDriver/>}/>
+        <Route path='/route-map' element={<RouteMapDriver/>}/>
+        <Route path='/messages' element={<MessageManagement/>}/>
+        <Route path='/parent-settings' element={<ParentSettings/>}/>
       </Routes>
     </div>
   )
