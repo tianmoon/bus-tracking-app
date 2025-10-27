@@ -1,7 +1,7 @@
 import Student from '../models/studentModel.js';
 
 // Lấy tất cả học sinh
-export const getAllStudents = async (req, res ) => {
+export const getAllStudents = async (req, res) => {
     try {
         const students = await Student.getAll();
         res.status(200).json({
@@ -57,6 +57,14 @@ export const createStudent = async (req, res) => {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Thiếu thông tin bắt buộc: name và grade',
+                code: 400
+            });
+        }
+
+        if( studentData.parent_id === undefined ) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Thiếu thông tin bắt buộc: parent_id',
                 code: 400
             });
         }
