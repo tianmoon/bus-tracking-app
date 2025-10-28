@@ -1,6 +1,5 @@
 import React from "react";
 import { FaBus, FaBell, FaMapMarkedAlt, FaUserGraduate, FaExclamationTriangle } from "react-icons/fa";
-import "./DriverTuyenDuong.css";
 
 function DriverTuyenDuong() {
   return (

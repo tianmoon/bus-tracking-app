@@ -7,23 +7,14 @@ FaUserCircle,
 FaCog,
 FaChild,
 } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar/Sidebar";
+
 
 export function StudentInfoPH() {
 return ( 
 <div className="flex h-screen bg-gray-50 font-inter">
   {/* Sidebar */} 
-  <aside className="w-56 bg-blue-900 text-white flex flex-col p-5"> 
-    <div className="flex items-center mb-8"> <FaBus className="text-4xl text-blue-300 mr-2" /> 
-      <h2 className="text-lg font-semibold leading-tight">SafeBus Parent</h2> 
-    </div>
-    <ul className="space-y-2">
-      <li className="hover:bg-blue-700 cursor-pointer rounded-lg px-3 py-2">🚌 Theo dõi xe buýt</li>
-      <li className="hover:bg-blue-700 cursor-pointer rounded-lg px-3 py-2">🔔 Thông báo</li>
-      <li className="hover:bg-blue-700 cursor-pointer rounded-lg px-3 py-2">🧾 Lịch sử chuyến đi</li>
-      <li className="bg-blue-700 rounded-lg px-3 py-2 font-medium">👦 Thông tin con em</li>
-      <li className="hover:bg-blue-700 cursor-pointer rounded-lg px-3 py-2">⚙️ Cài đặt</li>
-    </ul>
-  </aside>
+  <Sidebar userRole='parent'/>
 
   {/* Main Content */}
   <main className="flex-1 p-6 overflow-y-auto">

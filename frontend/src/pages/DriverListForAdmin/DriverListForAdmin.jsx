@@ -1,30 +1,13 @@
 import React from "react";
-import { FaBus, FaBell, FaUserCircle, FaUserGraduate, FaRoute, FaCalendarAlt, FaEnvelope } from "react-icons/fa";
-import "./DriverListForAdmin.css";
+import { FaUserCircle } from 'react-icons/fa';
+import Sidebar from "../../components/Sidebar/Sidebar";
+
 
 function DriverListForAdmin() {
   return (
     <div className="admin-dashboard">
       {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo-section">
-          <FaBus className="logo-icon" />
-          <h2>SchoolBus Pro</h2>
-          <p>Hệ thống quản lý</p>
-        </div>
-        <nav>
-          <ul>
-            <li><FaBus /> Tổng quan</li>
-            <li><FaUserGraduate /> Học sinh</li>
-            <li className="active"><FaUserCircle /> Tài xế</li>
-            <li><FaBus /> Xe buýt</li>
-            <li><FaRoute /> Tuyến đường</li>
-            <li><FaCalendarAlt /> Lịch trình</li>
-            <li><FaEnvelope /> Tin nhắn</li>
-            <li><FaBell /> Cảnh báo</li>
-          </ul>
-        </nav>
-      </aside>
+      <Sidebar userRole='admin'/>
 
       {/* Main content */}
       <main className="main-content">

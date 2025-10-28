@@ -1,11 +1,8 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from './pages/Home'
-import Application from './pages/Application'
 import Login from './pages/Login/Login'
 import Dashboard from './pages/DashboardAdmin/Dashboard'
-import DashboardTaixe from './pages/DashboardTX/DashboardTaixe'
-import DashboardPH from './pages/DashboardPH/DashboardPH'
-import Test from './pages/Test/Test'
+// import DashboardTaixe from './pages/DashboardTX/DashboardTaixe'
+// import DashboardPH from './pages/DashboardPH/DashboardPH'
 import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
@@ -15,26 +12,43 @@ import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
+import DriverListForAdmin from './pages/DriverListForAdmin/DriverListForAdmin'
+// import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
+// import AdminLichTrinh from './pages/AdminLichTrinh/AdminLichTrinh'
+// import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
+// import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
+// import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
+
 function App() {
   return(
     <div>
       <Routes>
         <Route path='/' element={<Login />}/>
-        <Route path='/Home' element={<Home/>}/>
-        <Route path='/Application' element={<Application/>}/>
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/dashboard-container' element={<DashboardTaixe/>}/>
-        <Route path='/ph-container' element={<DashboardPH/>}/>
-        <Route path='/test' element={<Test/>}/>
-        <Route path='/student-list-admin' element={<StudentListForAdmin/>}/>
-        <Route path='/bus-list-admin' element={<BusListForAdmin/>}/>
-        <Route path='/student-list-driver' element={<StudentListForDriver/>}/>
-        <Route path='/student-info-parent' element={<StudentInfoPH/>}/>
-        <Route path='/alerts' element={<AlertManagement/>}/>
-        <Route path='/trip-report' element={<TripReportDriver/>}/>
-        <Route path='/route-map' element={<RouteMapDriver/>}/>
-        <Route path='/messages' element={<MessageManagement/>}/>
-        <Route path='/parent-settings' element={<ParentSettings/>}/>
+
+        {/* ADMIN ROUTES */}
+        <Route path='/admin/dashboard' element={<Dashboard/>}/>
+        <Route path='/admin/students' element={<StudentListForAdmin/>}/>
+        <Route path='/admin/drivers' element={<DriverListForAdmin/>}/>
+        <Route path='/admin/buses' element={<BusListForAdmin/>}/>
+        {/* <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
+        <Route path='/admin/schedules' element={<AdminLichTrinh/>}/> */}
+        <Route path='/admin/messages' element={<MessageManagement/>}/>
+        <Route path='/admin/alerts' element={<AlertManagement/>}/>
+
+        {/* DRIVER ROUTES */}
+        {/* <Route path='/driver/schedules' element={<DashboardTaixe/>}/> */}
+        <Route path='/driver/students' element={<StudentListForDriver/>}/>
+        <Route path='/driver/reports' element={<TripReportDriver/>}/>
+        <Route path='/driver/routes' element={<RouteMapDriver/>}/>
+        {/* <Route path='/driver/issues' element={<DriverCanhbao/>}/> */}
+        
+
+        {/* PARENT ROUTES */}
+        {/* <Route path='/parent/childs' element={<DashboardPH/>}/> */}
+        <Route path='/parent/child-info' element={<StudentInfoPH/>}/>
+        {/* <Route path='/parent/alerts' element={<AlertManagement/>}/> */}
+        {/* <Route path='/parent/messages' element={<MessageManagement/>}/> */}
+        <Route path='/parent/settings' element={<ParentSettings/>}/>
       </Routes>
     </div>
   )

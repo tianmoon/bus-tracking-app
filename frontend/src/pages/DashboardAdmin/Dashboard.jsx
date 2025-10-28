@@ -5,7 +5,7 @@ import "./Dashboard.css";
 function Dashboard() {
   return (
     <div className="dashboard">
-      <Sidebar />
+      <Sidebar userRole='admin'/>
 
       <div className="main-content">
         <header className="dashboard-header">
