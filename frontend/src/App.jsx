@@ -15,6 +15,7 @@ import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
+import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
 function App() {
   return(
     <div>
@@ -35,6 +36,7 @@ function App() {
         <Route path='/route-map' element={<RouteMapDriver/>}/>
         <Route path='/messages' element={<MessageManagement/>}/>
         <Route path='/parent-settings' element={<ParentSettings/>}/>
+        <Route path='/driver-management' element={<DriverForAdmin/>}/>
       </Routes>
     </div>
   )
