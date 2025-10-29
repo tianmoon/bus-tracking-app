@@ -4,19 +4,44 @@ let loggedInUsers = {}; // Map để lưu trữ trạng thái đăng nhập củ
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const [rows] = await db.query(
-            'SELECT * FROM user WHERE email = ? AND password = ?',
-            [email, password]
-        );
+        const { email, password, role } = req.body;
 
-        if (!email || !password) {
+        if (!email) {
             return res.status(400).json({
                 status: 'fail',
-                message: 'Thiếu thông tin bắt buộc: email và password',
+                message: 'Vui lòng nhập email',
                 code: 400
             });
         }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                status: 'fail',
+                message: 'Email không hợp lệ',
+                code: 400});
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Vui lòng nhập mật khẩu',
+                code: 400
+            });
+        }
+
+        if (!role) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Vui lòng chọn vai trò',
+                code: 400
+            });
+        }
+
+        const [rows] = await db.query(
+            'SELECT * FROM user WHERE email = ? AND password = ? AND role = ?',
+            [email, password, role]
+        );
 
         const user = rows[0];
         if (!user) {

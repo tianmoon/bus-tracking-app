@@ -15,6 +15,10 @@ import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
 // import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
 // import AdminLichTrinh from './pages/AdminLichTrinh/AdminLichTrinh'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
+// import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
+// import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
 function App() {
   return(
@@ -48,6 +52,8 @@ function App() {
         <Route path='/parent/settings' element={<ParentSettings/>}/>
           
       </Routes>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   )
 }
