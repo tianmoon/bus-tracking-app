@@ -8,7 +8,7 @@ import StudentListForDriver from './pages/StudentListForDriver/StudentListForDri
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
 import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
-import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
+import DriverRoute from './pages/DriverRoute/DriverRoute'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
 import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
@@ -36,7 +36,7 @@ function App() {
         {/* <Route path='/driver/schedules' element={<DashboardTaixe/>}/> */}
         <Route path='/driver/students' element={<StudentListForDriver/>}/>
         <Route path='/driver/reports' element={<TripReportDriver/>}/>
-        <Route path='/driver/routes' element={<RouteMapDriver/>}/>
+        <Route path='/driver/routes' element={<DriverRoute/>}/>
         {/* <Route path='/driver/issues' element={<DriverCanhbao/>}/> */}
         
 
