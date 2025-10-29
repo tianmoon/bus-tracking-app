@@ -7,7 +7,6 @@ import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
-import AlertManagement from './pages/AlertManagement/AlertManagement'
 import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
@@ -16,8 +15,7 @@ import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
 // import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
 // import AdminLichTrinh from './pages/AdminLichTrinh/AdminLichTrinh'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
-// import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
-// import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
+import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
 function App() {
   return(
     <div>
@@ -32,7 +30,7 @@ function App() {
         {/* <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
         <Route path='/admin/schedules' element={<AdminLichTrinh/>}/> */}
         <Route path='/admin/messages' element={<MessageManagement/>}/>
-        <Route path='/admin/alerts' element={<AlertManagement/>}/>
+        <Route path='/admin/alerts' element={<AdminCanhBao/>}/>
 
         {/* DRIVER ROUTES */}
         {/* <Route path='/driver/schedules' element={<DashboardTaixe/>}/> */}
