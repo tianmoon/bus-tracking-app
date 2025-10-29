@@ -1,52 +1,19 @@
 import React, { useState } from 'react';
-import { Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map, ClipboardCheck } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import Sidebar from "../../components/Sidebar/Sidebar";
+
 function StudentListForAdmin() {
     const [students, setStudents] = useState([
         { id: 1, name: 'Nguyễn Văn A', class: 'DCT1234' }
     ]);
 
 
-    const menuItems = [
-        { icon: Users, label: 'Học sinh', active: true },
-        { icon: Calendar, label: 'Lịch trình', active: false },
-        { icon: MessageSquare, label: 'Tin nhắn', active: false },
-        { icon: AlertTriangle, label: 'Cảnh báo', active: false },
-        { icon: Map, label: 'Bản đồ', active: false },
-        { icon: ClipboardCheck, label: 'Báo cáo', active: false}
-    ];
 
     return (
         <>
             <div className="flex min-h-screen bg-gray-50">
                 {/* Sidebar */}
-                <div className="w-64 bg-white shadow-lg">
-                    <div className="p-4 border-b">
-                        <div className="flex items-center">
-                            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-                                <Bus className="text-white" size={24} />
-                            </div>
-                            <div>
-                                <div className="font-bold text-lg">SchoolBus Pro</div>
-                                <div className="text-xs text-gray-500">Hệ thống quản lý</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <nav className="p-3">
-                        {menuItems.map((item, index) => (
-                            <button
-                                key={index}
-                                className={`w-full flex items-center px-4 py-3 mb-2 rounded-lg transition-colors ${item.active
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
-                            >
-                                <item.icon size={20} className="mr-3" />
-                                <span>{item.label}</span>
-                            </button>
-                        ))}
-                    </nav>
-                </div>
+                <Sidebar userRole='driver'/>
 
                 {/* Main Content */}
                 <div className="flex-1">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 
 function TripReportDriver() {
   const [tripData] = useState({
@@ -25,14 +26,6 @@ function TripReportDriver() {
       }
     ]
   });
-
-  const menuItems = [
-    { icon: BarChart3, label: 'Lịch làm việc', active: false },
-    { icon: Users, label: 'Danh sách học sinh', active: false },
-    { icon: Route, label: 'Báo cáo chuyến đi', active: true },
-    { icon: AlertTriangle, label: 'Cảnh báo sự cố', active: false },
-    { icon: Map, label: 'Bản đồ tuyến đường', active: false },
-  ];
 
   return (
     <>
@@ -343,29 +336,7 @@ function TripReportDriver() {
 
       <div className="trip-report-container">
         {/* Sidebar */}
-        <aside className="trip-sidebar">
-          <div className="trip-sidebar-logo">
-            <div className="trip-logo-icon">
-              <Bus size={24} />
-            </div>
-            <div className="trip-logo-text">
-              <h3>SchoolBus</h3>
-              <p>Tài xế</p>
-            </div>
-          </div>
-
-          <nav className="trip-sidebar-menu">
-            {menuItems.map((item, index) => (
-              <div 
-                key={index}
-                className={`trip-menu-item ${item.active ? 'active' : ''}`}
-              >
-                <item.icon size={18} />
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <Sidebar userRole='driver'/>
 
         {/* Main Content */}
         <main className="trip-main">

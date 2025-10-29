@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, User, Calendar, MessageSquare, HelpCircle, Settings } from 'lucide-react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+
 
 function ParentSettings() {
   const [userInfo] = useState({
@@ -366,30 +368,7 @@ function ParentSettings() {
 
       <div className="parent-settings-container">
         {/* Sidebar */}
-        <aside className="parent-sidebar">
-          <div className="parent-sidebar-logo">
-            <div className="parent-logo-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 8.5L12 3.5L7 8.5V19.5H10V14.5H14V19.5H17V8.5Z"/>
-              </svg>
-            </div>
-            <div className="parent-logo-text">
-              <h3>SafeBus Parent</h3>
-            </div>
-          </div>
-
-          <nav className="parent-sidebar-menu">
-            {menuItems.map((item, index) => (
-              <div 
-                key={index}
-                className={`parent-menu-item ${item.active ? 'active' : ''}`}
-              >
-                <item.icon size={18} />
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <Sidebar userRole='parent'/>
 
         {/* Main Content */}
         <main className="parent-main">

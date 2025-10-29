@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map } from 'lucide-react';
+import { BarChart3, Users, Route, AlertTriangle, Map } from 'lucide-react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+
 
 function RouteMapDriver() {
   const [routeData] = useState({
@@ -370,29 +372,7 @@ function RouteMapDriver() {
 
       <div className="route-map-container">
         {/* Sidebar */}
-        <aside className="route-sidebar">
-          <div className="route-sidebar-logo">
-            <div className="route-logo-icon">
-              <Bus size={24} />
-            </div>
-            <div className="route-logo-text">
-              <h3>SchoolBus</h3>
-              <p>Tài xế</p>
-            </div>
-          </div>
-
-          <nav className="route-sidebar-menu">
-            {menuItems.map((item, index) => (
-              <div 
-                key={index}
-                className={`route-menu-item ${item.active ? 'active' : ''}`}
-              >
-                <item.icon size={18} />
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <Sidebar userRole='driver'/>
 
         {/* Main Content */}
         <main className="route-main">

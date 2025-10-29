@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
-import { Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map, Send } from 'lucide-react';
+import { Bell, Send } from 'lucide-react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+
 
 function MessageManagement() {
   const [messageInput, setMessageInput] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('parent');
 
-  const menuItems = [
-    { icon: BarChart3, label: 'Tổng quan', active: false },
-    { icon: Users, label: 'Học sinh', active: false },
-    { icon: User, label: 'Tài xế', active: false },
-    { icon: Bus, label: 'Xe buýt', active: false },
-    { icon: Route, label: 'Tuyến đường', active: false },
-    { icon: Calendar, label: 'Lịch trình', active: false },
-    { icon: MessageSquare, label: 'Tin nhắn', active: true },
-    { icon: AlertTriangle, label: 'Cảnh báo', active: false },
-    { icon: Map, label: 'Bản đồ theo dõi', active: false },
-  ];
 
   const handleSendMessage = () => {
     if (messageInput.trim()) {
@@ -376,29 +367,7 @@ function MessageManagement() {
 
       <div className="message-dashboard-container">
         {/* Sidebar */}
-        <aside className="message-sidebar">
-          <div className="message-sidebar-logo">
-            <div className="message-logo-icon">
-              <Bus size={24} />
-            </div>
-            <div className="message-logo-text">
-              <h3>SchoolBus Pro</h3>
-              <p>Hệ thống quản lý</p>
-            </div>
-          </div>
-
-          <nav className="message-sidebar-menu">
-            {menuItems.map((item, index) => (
-              <div 
-                key={index}
-                className={`message-menu-item ${item.active ? 'active' : ''}`}
-              >
-                <item.icon size={20} />
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </nav>
-        </aside>
+        <Sidebar userRole='admin'/>
 
         {/* Main Content */}
         <main className="message-main">
