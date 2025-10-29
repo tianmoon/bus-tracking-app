@@ -18,7 +18,6 @@ import DriverListForAdmin from './pages/DriverListForAdmin/DriverListForAdmin'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
 // import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
 // import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
-
 function App() {
   return(
     <div>
@@ -49,6 +48,7 @@ function App() {
         {/* <Route path='/parent/alerts' element={<AlertManagement/>}/> */}
         {/* <Route path='/parent/messages' element={<MessageManagement/>}/> */}
         <Route path='/parent/settings' element={<ParentSettings/>}/>
+          
       </Routes>
     </div>
   )
