@@ -7,9 +7,8 @@ import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
 import BusListForAdmin from './pages/BusListForAdmin/BusListForAdmin'
 import StudentInfoPH from './pages/StudentInfoPH/StudentInfoPH'
-import AlertManagement from './pages/AlertManagement/AlertManagement'
-import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
-import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
+import DriverTripReport from './pages/DriverTripReport/DriverTripReport'
+import DriverRoute from './pages/DriverRoute/DriverRoute'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
 import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
@@ -20,7 +19,7 @@ import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
 // import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
 function App() {
   return(
     <div>
@@ -35,13 +34,13 @@ function App() {
         {/* <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
         <Route path='/admin/schedules' element={<AdminLichTrinh/>}/> */}
         <Route path='/admin/messages' element={<MessageManagement/>}/>
-        <Route path='/admin/alerts' element={<AlertManagement/>}/>
+        <Route path='/admin/alerts' element={<AdminCanhBao/>}/>
 
         {/* DRIVER ROUTES */}
         {/* <Route path='/driver/schedules' element={<DashboardTaixe/>}/> */}
         <Route path='/driver/students' element={<StudentListForDriver/>}/>
-        <Route path='/driver/reports' element={<TripReportDriver/>}/>
-        <Route path='/driver/routes' element={<RouteMapDriver/>}/>
+        <Route path='/driver/reports' element={<DriverTripReport/>}/>
+        <Route path='/driver/routes' element={<DriverRoute/>}/>
         {/* <Route path='/driver/issues' element={<DriverCanhbao/>}/> */}
         
 
