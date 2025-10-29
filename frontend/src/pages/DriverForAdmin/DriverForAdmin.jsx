@@ -71,55 +71,10 @@ const DriverForAdmin = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white p-6 fixed left-0 top-0 h-full overflow-y-auto">
-        {/* Logo */}
-        <div className="text-center mb-8 pb-6 border-b border-blue-700">
-          <div className="text-4xl mb-2">🚌</div>
-          <h2 className="text-xl font-bold">Schedules Pro</h2>
-          <div className="text-xs bg-blue-700 px-3 py-1 rounded-full inline-block mt-2">
-            Quản trị viên
-          </div>
-        </div>
-
-        {/* Menu */}
-        <ul className="space-y-2">
-          <li className="flex items-center space-x-3 p-3 bg-blue-600 rounded-lg cursor-pointer">
-            <Home size={20} />
-            <span>Tổng quan</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <UserCheck size={20} />
-            <span>Tài xế</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <Users size={20} />
-            <span>Học sinh</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <Bus size={20} />
-            <span>Xe buýt</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <Route size={20} />
-            <span>Tuyến đường</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <Calendar size={20} />
-            <span>Lịch trình</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <MessageSquare size={20} />
-            <span>Tin nhắn</span>
-          </li>
-          <li className="flex items-center space-x-3 p-3 hover:bg-blue-700 rounded-lg cursor-pointer transition-colors">
-            <Bell size={20} />
-            <span>Cảnh báo</span>
-          </li>
-        </ul>
-      </div>
+      <Sidebar userRole='admin'/>
 
       {/* Main Content */}
-      <div className="ml-64 flex-1 p-8">
+      <div className="flex-1 p-8">
         {/* Header */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border-l-4 border-blue-500">
           <div className="flex justify-between items-center">

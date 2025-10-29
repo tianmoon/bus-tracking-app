@@ -12,7 +12,7 @@ import TripReportDriver from './pages/TripReportDriver/TripReportDriver'
 import RouteMapDriver from './pages/RouteMapDriver/RouteMapDriver'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
-import DriverListForAdmin from './pages/DriverListForAdmin/DriverListForAdmin'
+import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
 // import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
 // import AdminLichTrinh from './pages/AdminLichTrinh/AdminLichTrinh'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
@@ -27,7 +27,7 @@ function App() {
         {/* ADMIN ROUTES */}
         <Route path='/admin/dashboard' element={<Dashboard/>}/>
         <Route path='/admin/students' element={<StudentListForAdmin/>}/>
-        <Route path='/admin/drivers' element={<DriverListForAdmin/>}/>
+        <Route path='/admin/drivers' element={<DriverForAdmin/>}/>
         <Route path='/admin/buses' element={<BusListForAdmin/>}/>
         {/* <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
         <Route path='/admin/schedules' element={<AdminLichTrinh/>}/> */}
