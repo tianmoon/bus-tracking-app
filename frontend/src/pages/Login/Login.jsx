@@ -2,65 +2,81 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
 import busImage from '../../assets/schoolbus.png';
-
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 function Login() {
+  const API_URL = "http://localhost:5000/api/auth/login";
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Admin");
+  const [role, setRole] = useState("");
   const navigate = useNavigate(); // Dùng để điều hướng
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const response = await axios.post(API_URL, {
+        email: email,
+        password: password,
+        role: role 
+      });
+      if (response.data.status === "success") {
 
-    // Kiểm tra thông tin đăng nhập
-    if (
-      (emailOrPhone === "admin" && password === "ADMIN" && role === "Admin") ||
-      (emailOrPhone === "parent" && password === "PARENT" && role === "Phụ huynh") ||
-      (emailOrPhone === "driver" && password === "DRIVER" && role === "Tài xế")
-    ) {
-      setError("");
-      alert("Đăng nhập thành công!");
-
-      // Điều hướng theo vai trò
-      if (role === "Admin") {
-        navigate("/dashboard");
-      } else if (role === "Tài xế") {
-        navigate("/dashboard-container");
-      } else if (role === "Phụ huynh") {
-        navigate("/ph-container");
+        // Lưu thông tin người dùng vào localStorage
+        localStorage.setItem('user', JSON.stringify(response.data.data));
+        
+        // Điều hướng theo vai trò
+        if (role === "manager") {
+          navigate("/admin/dashboard");
+        } else if (role === "driver") {
+          navigate("/driver/schedules");
+        } else if (role === "parent") {
+          navigate("/parent/child-info");
+        }
       }
-    } else {
-      setError("Thông tin đăng nhập không chính xác.");
+    } catch (err) {
+      setError(err.response?.data?.message || "Đã xảy ra lỗi trong quá trình đăng nhập.");
+    } finally {
+      setLoading(false);
     }
+  
   };
 
     return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleLogin}>
-        <h2>Smart School Bus Tracking System</h2>
+        <h2>Đăng nhập</h2>
 
         {error && <p className="error-message">{error}</p>}
 
         <input
           type="text"
-          placeholder="Email hoặc Số điện thoại"
-          value={emailOrPhone}
-          onChange={(e) => setEmailOrPhone(e.target.value)}
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
           type="password"
           placeholder="Mật khẩu"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="Admin">Admin</option>
-          <option value="Phụ huynh">Phụ huynh</option>
-          <option value="Tài xế">Tài xế</option>
+
+        <select onChange={(e) => setRole(e.target.value)}>
+          <option value="">Chọn vai trò</option>
+          <option value="manager">Quản lý</option>
+          <option value="parent">Phụ huynh</option>
+          <option value="driver">Tài xế</option>
         </select>
-        <button className="login-btn">Đăng nhập</button>
+        <button type="submit" disabled={loading}  className="login-btn">
+          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+        </button>
+
         <button type="button" className="forgot-btn">Quên mật khẩu</button>
       </form>
 
