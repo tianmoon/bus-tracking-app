@@ -55,6 +55,8 @@ CREATE TABLE Bus (
 CREATE TABLE `Route` (
   `route_id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(150),
+  `start` VARCHAR(150),
+  `end` VARCHAR(150),
   `active` TINYINT(1) DEFAULT 1
 );
 -- ======================
@@ -67,6 +69,7 @@ CREATE TABLE `BusStop` (
   `longitude` DOUBLE,
   `active` TINYINT(1) DEFAULT 1,
   `address` VARCHAR(255),
+  `order_index` INT,
   `route_id` INT,
   CONSTRAINT `fk_busstop_route` FOREIGN KEY (`route_id`) REFERENCES `Route`(`route_id`)
 );

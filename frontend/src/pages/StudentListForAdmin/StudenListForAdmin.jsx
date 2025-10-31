@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar.jsx';
-import { Bell, X } from 'lucide-react';
+import { Bell, X, CircleUserRound } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 function StudentListForAdmin() {
@@ -125,7 +125,7 @@ function StudentListForAdmin() {
                                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                                 </div>
                                 <div className="flex items-center">
-                                    <div className="w-10 h-10 bg-indigo-600 rounded-full mr-2"></div>
+                                    <CircleUserRound size={28} className="text-gray-600 mr-2" />
                                     <span className="font-medium">Admin</span>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@ function StudentListForAdmin() {
                                 </button>
                             </div>
                             <div className="overflow-hidden">
-                                <table className="w-full">
+                                <table className="w-full table-fixed">
                                     <thead className="bg-indigo-600 text-white">
                                         <tr>
                                             <th className="px-6 py-4 text-left font-semibold">Id</th>
@@ -150,12 +150,12 @@ function StudentListForAdmin() {
                                             <th className="px-6 py-4 text-left font-semibold">Lớp</th>
                                             <th className="px-6 py-4 text-left font-semibold">Phụ huynh</th>
                                             <th className="px-6 py-4 text-left font-semibold">Xe buýt</th>
-                                            <th className="px-6 py-4 text-left font-semibold">Thao tác</th>
+                                            {/* <th className="px-6 py-4 text-left font-semibold">Thao tác</th> */}
                                         </tr>
                                     </thead>
                                 </table>
                                 <div className="overflow-y-auto max-h-165">
-                                    <table className="w-full">
+                                    <table className="w-full table-fixed">
                                         <tbody>
                                             {students.length > 0 ? (
                                                 students.map((student) => (
@@ -165,7 +165,7 @@ function StudentListForAdmin() {
                                                         <td className="px-6 py-4">{student.grade}</td>
                                                         <td className="px-6 py-4">{student.parent_name}</td>
                                                         <td className="px-6 py-4">{student.plate_number}</td>
-                                                        <td className="px-6 py-4">
+                                                        {/* <td className="px-6 py-4">
                                                             <button className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors">
                                                                 Sửa
                                                             </button>
@@ -175,7 +175,7 @@ function StudentListForAdmin() {
                                                             >
                                                                 Xóa
                                                             </button>
-                                                        </td>
+                                                        </td> */}
                                                     </tr>
                                                 ))
                                             ) : (

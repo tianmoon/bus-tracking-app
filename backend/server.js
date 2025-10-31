@@ -6,6 +6,7 @@ import parentRoutes from './routes/parentRoutes.js';
 import busRoutes from './routes/busRoutes.js';
 import driverRoutes from './routes/driverRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import routeRoutes from './routes/routeRoutes.js';
 
 
 // Initialize Express 
@@ -24,6 +25,7 @@ app.use('/api/parents', parentRoutes);
 app.use('/api/buses', busRoutes);
 app.use('/api/drivers', driverRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/routes', routeRoutes);
 
 // Route mặc định
 app.get('/', (req, res) => {
