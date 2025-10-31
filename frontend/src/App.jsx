@@ -12,8 +12,8 @@ import DriverRoute from './pages/DriverRoute/DriverRoute'
 import MessageManagement from './pages/MessageManagement/MessageManagement'
 import ParentSettings from './pages/ParentSettings/ParentSettings'
 import DriverForAdmin from './pages/DriverForAdmin/DriverForAdmin'
-// import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
-// import AdminLichTrinh from './pages/AdminLichTrinh/AdminLichTrinh'
+import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
+import AdminLichTrinh from './pages/AdminLichtrinh/AdminLichtrinh'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
 // import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
 // import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
@@ -31,8 +31,8 @@ function App() {
         <Route path='/admin/students' element={<StudentListForAdmin/>}/>
         <Route path='/admin/drivers' element={<DriverForAdmin/>}/>
         <Route path='/admin/buses' element={<BusListForAdmin/>}/>
-        {/* <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
-        <Route path='/admin/schedules' element={<AdminLichTrinh/>}/> */}
+        <Route path='/admin/routes' element={<AdminTuyenDuong/>}/>
+        <Route path='/admin/schedules' element={<AdminLichTrinh/>}/>
         <Route path='/admin/messages' element={<MessageManagement/>}/>
         <Route path='/admin/alerts' element={<AdminCanhBao/>}/>
 

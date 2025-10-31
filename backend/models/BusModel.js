@@ -19,7 +19,7 @@ class BusModel {
     static async getAll() {
         try {
             const [rows] = await db.query(
-                `   SELECT b.bus_id, b.plate_number, dr.name AS driver_name
+                `   SELECT b.bus_id, b.plate_number, dr.name AS driver_name, b.active
                     FROM bus b
                     LEFT JOIN driver dr ON dr.driver_id = b.driver_id `
             );
@@ -52,7 +52,7 @@ class BusModel {
         try {
             const { plate_number, driver_id } = busData;
             const [result] = await db.query(
-                'INSERT INTO bus (plate_number, driver_id) VALUES (?, ?)',
+                'INSERT INTO bus (plate_number, driver_id, active) VALUES (?, ?, 0)',
                 [plate_number, driver_id]
             );
             return {
