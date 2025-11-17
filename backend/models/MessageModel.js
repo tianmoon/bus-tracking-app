@@ -18,9 +18,9 @@ class MessageModel {
     // Tạo tin nhắn mới
     static async create(message) {
         const { content, sender_id, receiver_id, room } = message;
-        if (!receiver_id) {
-            receiver_id = null;
-        }
+        // if (!receiver_id) {
+        //     receiver_id = null;
+        // }
         try {
             const [result] = await db.query(
                 `INSERT INTO message (content, time_sent, sender_id, receiver_id, room, status)
