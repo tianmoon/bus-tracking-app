@@ -136,7 +136,6 @@ function MessageManagement() {
               {messages[selectedGroup].length > 0 ? (
                 <div className="space-y-3">
                   {messages[selectedGroup].map((msg) => (
-                    console.log(msg.msg_id),
                     <div key={msg.msg_id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                       <div className="flex justify-between items-start mb-2">
                         <span className="font-semibold text-indigo-600">{"Tôi"}</span>
