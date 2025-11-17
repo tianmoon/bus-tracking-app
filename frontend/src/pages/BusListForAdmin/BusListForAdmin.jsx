@@ -3,9 +3,12 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { Bell, CircleUserRound, X } from 'lucide-react';
 import axios from "axios";
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
+// import { useNavigate } from 'react-router-dom';
 function BusListForAdmin() {
     const [buses, setBuses] = useState([]);
     const [drivers, setDrivers] = useState([]);
+    // const navigate = useNavigate();
 
     // Fetch bus
     const fetchBuses = async () => {
@@ -64,6 +67,12 @@ function BusListForAdmin() {
         setIsModalOpen(false);
     }
 
+    // const handleTrackingButton = (data) => {
+    //     // Chuyển hướng đến trang theo dõi xe buýt
+    //     navigate('/admin/tracking', { state: { data } });
+        
+    // }
+
     return (
         <>
             <div className="flex min-h-screen bg-gray-50">
@@ -73,24 +82,7 @@ function BusListForAdmin() {
                 {/* Main Content */}
                 <div className="flex-1">
                     {/* Top Navigation */}
-                    <div className="bg-white border-b px-6 py-4">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-800">Dashboard Quản lý</h1>
-                                <p className="text-sm text-gray-500">Tổng quan hệ thống xe buýt trường học</p>
-                            </div>
-                            <div className="flex items-center">
-                                <div className="relative mr-4">
-                                    <Bell size={24} className="text-gray-600" />
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                                </div>
-                                <div className="flex items-center">
-                                    <CircleUserRound size={28} className="text-gray-600 mr-2" />
-                                    <span className="font-medium">Admin</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Header />
 
                     {/* Bus List */}
                     <div className="p-6">
@@ -105,7 +97,7 @@ function BusListForAdmin() {
                                 <table className="w-full table-fixed">
                                     <thead className="bg-indigo-600 text-white">
                                         <tr>
-                                            <th className="px-6 py-4 text-left font-semibolds">Id</th>
+                                            <th className="px-6 py-4 text-left font-semibold">Id</th>
                                             <th className="px-6 py-4 text-left font-semibold">Biển số</th>
                                             <th className="px-6 py-4 text-left font-semibold">Trạng thái</th>
                                             <th className="px-6 py-4 text-left font-semibold">Tài xế</th>
@@ -121,25 +113,25 @@ function BusListForAdmin() {
                                                     <td className="px-6 py-4 ">{bus.bus_id}</td>
                                                     <td className="px-6 py-4 font-medium">{bus.plate_number}</td>
                                                     <td className="px-6 py-4">
-                                                        <span className={bus.active == 1 ?
+                                                        <span className={bus.active == 0 ?
                                                             "bg-green-500 text-green-800 rounded-[15px] px-2 py-1 font-medium whitespace-nowrap" :
                                                             "bg-yellow-200 text-yellow-800 rounded-[15px] px-2 py-1 font-medium whitespace-nowrap"
                                                         }>
-                                                            {bus.active == 1 ? "Hoạt động" : "Đang chờ"}
+                                                            {bus.active == 0 ? "Bình thường" : "Bảo trì"}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 font-medium">{bus.driver_name}</td>
                                                     {/* <td className="px-6 py-4">
-                                                    <button className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors ">
-                                                        Sửa
-                                                    </button>
-                                                    <button
+                                                        <button className={bus.active == 1 ? "bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors" : "bg-gray-400 text-white px-4 py-2 rounded mr-2 cursor-not-allowed"} onClick={() => handleTrackingButton(bus)} disabled={bus.active != 1}>
+                                                            Theo dõi
+                                                        </button>
+                                                        <button
                                                         onClick={() => handleDelete(bus.id)}
                                                         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
                                                     >
                                                         Xóa
                                                     </button>
-                                                </td> */}
+                                                    </td> */}
                                                 </tr>))) : (
                                                 <tr>
                                                     <td colSpan="6" className="text-center py-4 text-gray-500">

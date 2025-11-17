@@ -97,7 +97,7 @@ const RouteDetailModal = ({ onClose, route, isOpen }) => {
                 mapInstanceRef.current = null;
             }
         };
-    }, [routeDetail]);
+    }, [routeDetail, isOpen]);
 
     if (!isOpen) return null;
 

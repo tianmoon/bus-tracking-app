@@ -80,8 +80,9 @@ CREATE TABLE `Schedule` (
   `schedule_id` INT AUTO_INCREMENT PRIMARY KEY,
   `start_time` DATETIME,
   `end_time` DATETIME,
-  `day_of_week` ENUM('Monday','Tuesday','Wednesday','Thursday','Friday'),
+  `day_of_week` INT,
   `active` TINYINT(1) DEFAULT 1,
+  `describe` VARCHAR(255),
   `route_id` INT,
   CONSTRAINT `fk_schedule_route` FOREIGN KEY (`route_id`) REFERENCES `Route`(`route_id`)
 );
@@ -92,7 +93,6 @@ CREATE TABLE `Assignment` (
   `asn_id` INT AUTO_INCREMENT PRIMARY KEY,
   `bus_id` INT,
   `schedule_id` INT,
-  `asn_date` DATE,
   CONSTRAINT `fk_assignment_bus` FOREIGN KEY (`bus_id`) REFERENCES `Bus`(`bus_id`),
   CONSTRAINT `fk_assignment_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `Schedule`(`schedule_id`)
 );
@@ -175,6 +175,7 @@ CREATE TABLE `Message` (
   `time_sent` DATETIME,
   `sender_id` INT,
   `receiver_id` INT,
+  `room` ENUM('driver','parent'),
   `status` ENUM('read','unread') DEFAULT 'unread',
   CONSTRAINT `fk_message_sender` FOREIGN KEY (`sender_id`) REFERENCES `Manager`(`manager_id`),
   CONSTRAINT `fk_message_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `User`(`user_id`)
@@ -278,17 +279,17 @@ INSERT INTO `Schedule` (start_time,end_time,day_of_week,active,route_id) VALUES
 ('2025-10-23 06:30:00','2025-10-23 08:30:00','Friday',1,10);
 
 -- 10 assignments (bus_id và schedule_id hợp lệ)
-INSERT INTO `Assignment` (bus_id, schedule_id, asn_date) VALUES
-(1,1,'2025-10-20'),
-(2,2,'2025-10-20'),
-(3,3,'2025-10-20'),
-(4,4,'2025-10-21'),
-(5,5,'2025-10-21'),
-(6,6,'2025-10-21'),
-(7,7,'2025-10-22'),
-(8,8,'2025-10-22'),
-(9,9,'2025-10-23'),
-(10,10,'2025-10-23');
+INSERT INTO `Assignment` (bus_id, schedule_id) VALUES
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,6),
+(7,7),
+(8,8),
+(9,9),
+(10,10);
 
 -- 10 trips (asn_id 1..10)
 INSERT INTO `Trip` (status, departure_time, arrival_time, asn_id) VALUES

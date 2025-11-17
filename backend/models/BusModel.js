@@ -15,6 +15,20 @@ class BusModel {
         }
     }
 
+    // Check active của xe buýt
+    static async isBusActive(bus_id) {
+        try {
+            const [rows] = await db.query(
+                'SELECT active FROM bus WHERE bus_id = ?',
+                [bus_id]
+            );
+            return rows[0] ? rows[0].active === 1 : false;
+        }
+        catch (error) {
+            throw new Error('Lỗi khi kiểm tra trạng thái active của xe buýt trong cơ sở dữ liệu');
+        }
+    }
+
     // Lấy tất cả xe buýt
     static async getAll() {
         try {
