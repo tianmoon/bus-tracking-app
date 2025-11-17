@@ -1,4 +1,4 @@
-import { Settings, Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map } from 'lucide-react';
+import { ClipboardPlus, Settings, Bell, BarChart3, Users, User, Bus, Route, Calendar, MessageSquare, AlertTriangle, Map } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 function Sidebar(props) {
 
@@ -10,6 +10,7 @@ function Sidebar(props) {
       { icon: Bus, label: 'Xe buýt', path: '/admin/buses' },
       { icon: Route, label: 'Tuyến đường', path: '/admin/routes' },
       { icon: Calendar, label: 'Lịch trình', path: '/admin/schedules' },
+      { icon: ClipboardPlus, label: 'Phân công', path: '/admin/assignments' },
       { icon: MessageSquare, label: 'Tin nhắn', path: '/admin/messages' },
       { icon: AlertTriangle, label: 'Cảnh báo', path: '/admin/alerts' },
       { icon: Map, label: 'Bản đồ theo dõi', path: '/admin/tracking' },

@@ -7,6 +7,7 @@ import {
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
 const DriverForAdmin = () => {
   const [drivers, setDrivers] = useState([]);
   const [buses, setBuses] = useState([]);
@@ -113,24 +114,7 @@ const DriverForAdmin = () => {
           </div>
         </div> */}
 
-        <div className="bg-white border-b px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">Dashboard Quản lý</h1>
-              <p className="text-sm text-gray-500">Tổng quan hệ thống xe buýt trường học</p>
-            </div>
-            <div className="flex items-center">
-              <div className="relative mr-4">
-                <Bell size={24} className="text-gray-600" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-              </div>
-              <div className="flex items-center">
-                <CircleUserRound size={28} className="text-gray-600 mr-2" />
-                <span className="font-medium">Admin</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Header/>
 
         {/* Driver Management Section */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import './Login.css';
 import busImage from '../../assets/schoolbus.png';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { AppContext } from '../../context/AppContext.jsx';
 
 function Login() {
+  const { login } = useContext(AppContext);
   const API_URL = "http://localhost:5000/api/auth/login";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -25,16 +27,24 @@ function Login() {
         role: role 
       });
       if (response.data.status === "success") {
-
-        // Lưu thông tin người dùng vào localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.data));
+        if (role === 'driver') {
+        const information = await axios.get(`http://localhost:5000/api/user/driver/${response.data.data.user_id}`);
+        login(information.data.data);
+        }
+        if (role === 'parent') {
+        const information = await axios.get(`http://localhost:5000/api/user/parent/${response.data.data.user_id}`);
+        login(information.data.data);
+        }
+        if (role === 'manager') {
+          login(response.data.data);
+        }
         
         // Điều hướng theo vai trò
-        if (role === "manager") {
+        if (response.data.data.role === "manager") {
           navigate("/admin/dashboard");
-        } else if (role === "driver") {
+        } else if (response.data.data.role === "driver") {
           navigate("/driver/schedules");
-        } else if (role === "parent") {
+        } else if (response.data.data.role === "parent") {
           navigate("/parent/child-info");
         }
       }
@@ -77,7 +87,7 @@ function Login() {
           {loading ? "Đang đăng nhập..." : "Đăng nhập"}
         </button>
 
-        <button type="button" className="forgot-btn">Quên mật khẩu</button>
+        {/* <button type="button" className="forgot-btn">Quên mật khẩu</button> */}
       </form>
 
       <div className="bus-image">

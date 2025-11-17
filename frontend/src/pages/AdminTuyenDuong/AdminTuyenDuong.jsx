@@ -4,6 +4,7 @@ import { Bell, CircleUserRound, X } from 'lucide-react';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import RouteDetailModal from '../../components/RouteDetailModel';
+import Header from '../../components/Header';
 
 function AdminTuyenDuong() {
 
@@ -59,33 +60,16 @@ function AdminTuyenDuong() {
                 {/* Main Content */}
                 <div className="flex-1">
                     {/* Top Navigation */}
-                    <div className="bg-white border-b px-6 py-4">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-800">Dashboard Quản lý</h1>
-                                <p className="text-sm text-gray-500">Tổng quan hệ thống xe buýt trường học</p>
-                            </div>
-                            <div className="flex items-center">
-                                <div className="relative mr-4">
-                                    <Bell size={24} className="text-gray-600" />
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                                </div>
-                                <div className="flex items-center">
-                                    <CircleUserRound size={28} className="text-gray-600 mr-2" />
-                                    <span className="font-medium">Admin</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Header/>
 
                     {/* Bus List */}
                     <div className="p-6">
                         <div className="bg-white rounded-lg shadow-md overflow-hidden">
                             <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
                                 <h2 className="text-xl font-semibold">Danh sách tuyến đường</h2>
-                                <button onClick={() => setIsModalOpen(true)} className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                                {/* <button onClick={() => setIsModalOpen(true)} className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
                                     Thêm
-                                </button>
+                                </button> */}
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full table-fixed">
