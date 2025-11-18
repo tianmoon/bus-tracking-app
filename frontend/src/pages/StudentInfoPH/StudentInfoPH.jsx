@@ -8,6 +8,7 @@ FaCog,
 FaChild,
 } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import Header from "../../components/Header.jsx";
 
 
 export function StudentInfoPH() {
@@ -19,16 +20,7 @@ return (
   {/* Main Content */}
   <main className="flex-1 p-6 overflow-y-auto">
     {/* Header */}
-    <header className="flex justify-between items-center border-b border-gray-200 pb-3">
-      <div>
-        <h3 className="text-xl font-semibold text-gray-800">Thông tin con em</h3>
-        <p className="text-gray-500 text-sm">Xem chi tiết thông tin học sinh và tuyến xe buýt của con bạn</p>
-      </div>
-      <div className="flex items-center gap-2 text-gray-700 font-medium">
-        <FaUserCircle className="text-3xl text-blue-900" />
-        <span>Nguyễn Thị Lan</span>
-      </div>
-    </header>
+    <Header/>
 
     {/* Student Card */}
     <section className="mt-6 flex justify-start">

@@ -30,8 +30,6 @@ class UserModel {
         }
     }
 
-    //Check 
-
     // Thêm người dùng mới
     static async create(email, phone_number, role, conn) {
         try {
@@ -46,6 +44,38 @@ class UserModel {
         }
     }
 
+    // Lấy thông tin phụ huynh theo user_id
+    static async getParentByUserId(user_id) {
+        try {
+            const [rows] = await db.query(
+                    `SELECT pa.parent_id, u.user_id, pa.name, pa.identification, u.role
+                    FROM parent pa
+                    LEFT JOIN user u ON pa.user_id = u.user_id WHERE u.user_id = ?`,
+                    [user_id]
+            );
+            return rows[0];
+        }
+        catch (error) {
+            throw new Error('Lỗi khi lấy thông tin phụ huynh từ cơ sở dữ liệu');
+        }
+    }
+
+    // Lấy thông tin tài xế theo user_id
+    static async getDriverByUserId(user_id) {
+        try {
+            const [rows] = await db.query(
+                `SELECT dr.driver_id, u.user_id, u.role, dr.name 
+                FROM driver dr
+                LEFT JOIN user u ON u.user_id = dr.user_id
+                WHERE u.user_id = ?`,
+                [user_id]
+            );
+            return rows[0];
+        }
+        catch (error) {
+            throw new Error('Lỗi khi lấy thông tin tài xế từ cơ sở dữ liệu');
+        }
+    }
 }
 
 export default UserModel;
