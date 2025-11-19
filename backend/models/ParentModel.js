@@ -49,7 +49,23 @@ class ParentModel {
         catch (error) {
             throw new Error('Lỗi khi thêm phụ huynh mới vào cơ sở dữ liệu');
         }
-    }       
+    }      
+    
+    // Lấy học sinh theo phụ huynh
+    static async getStudentsByParentId(parent_id) {
+        try {
+            const [rows] = await db.query(
+                `SELECT st.student_id, st.name, st.grade, b.plate_number
+                FROM student st
+                LEFT JOIN parent pa ON pa.parent_id = st.parent_id
+                LEFT JOIN bus b ON b.bus_id = st.bus_id
+                WHERE pa.parent_id = ?`, [parent_id]);
+            return rows;
+        } catch (error) {
+            throw new Error('Lỗi khi lấy học sinh từ cơ sở dữ liệu');
+        }
+    }
+    
 }
 
 export default ParentModel;

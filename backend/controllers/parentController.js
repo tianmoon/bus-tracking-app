@@ -76,3 +76,23 @@ export const createParent = async (req, res) => {
         });
     }
 }
+
+// Lấy học sinh theo phụ huynh
+export const getStudentsByParentId = async (req, res) => {
+    try {
+        const parentId = req.params.id;
+        const students = await Parent.getStudentsByParentId(parentId);
+        res.status(200).json({
+            status: 'success',
+            data: students,
+            message: 'Lấy danh sách học sinh theo phụ huynh thành công'
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+            code: 500
+        });
+    }
+};
+
