@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Login from './pages/Login/Login'
 import Dashboard from './pages/DashboardAdmin/Dashboard'
-// import DashboardTaixe from './pages/DashboardTX/DashboardTaixe'
+import DashboardTaixe from './pages/DashboardTX/DashboardTaixe'
 // import DashboardPH from './pages/DashboardPH/DashboardPH'
 import StudentListForAdmin from './pages/StudentListForAdmin/StudenListForAdmin'
 import StudentListForDriver from './pages/StudentListForDriver/StudentListForDriver'
@@ -16,7 +16,7 @@ import AdminTuyenDuong from './pages/AdminTuyenDuong/AdminTuyenDuong'
 import AdminLichTrinh from './pages/AdminLichtrinh/AdminLichtrinh'
 // import AdminTinnhan from './pages/AdminTinnhan/AdminTinnhan'
 // import AdminCanhbao from './pages/AdminCanhbao/AdminCanhbao'
-// import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
+import DriverCanhbao from './pages/DriverCanhbao/DriverCanhbao'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
@@ -41,11 +41,11 @@ function App() {
         <Route path='/admin/tracking' element={<BusTrackingAdmin/>}/>
 
         {/* DRIVER ROUTES */}
-        {/* <Route path='/driver/schedules' element={<DashboardTaixe/>}/> */}
+        <Route path='/driver/schedule' element={<DashboardTaixe/>}/>
         <Route path='/driver/students' element={<StudentListForDriver/>}/>
         <Route path='/driver/reports' element={<DriverTripReport/>}/>
         <Route path='/driver/routes' element={<DriverRoute/>}/>
-        {/* <Route path='/driver/issues' element={<DriverCanhbao/>}/> */}
+        <Route path='/driver/issues' element={<DriverCanhbao/>}/>
         
 
         {/* PARENT ROUTES */}

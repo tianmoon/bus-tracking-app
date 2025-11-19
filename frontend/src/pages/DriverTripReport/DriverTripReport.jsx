@@ -1,131 +1,209 @@
-import React, { useMemo, useState } from "react";
-import Sidebar from "../../components/Sidebar/Sidebar.jsx";
-import { Bell, CheckCircle, Bus } from "lucide-react";
+import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { Bell, CheckCircle, Bus, CalendarX, AlertTriangle } from "lucide-react";
+
+// 1. IMPORT CÁC COMPONENT
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Header from "../../components/Header"; // Đảm bảo đường dẫn đúng
 
 function DriverTripReport() {
-  const [tripData] = useState({
-    title: "Báo cáo chuyến đi",
-    date: "Thứ Hai, 11 tháng 10, 2024",
-    status: "Đang hoạt động",
-    driver: { name: "Nguyễn Văn A", role: "Tài xế xe buýt" },
-    stops: [
-      {
-        id: 1,
-        name: "Điểm 1: 123 Lê Lợi, Quận 1",
-        address: "Trường tiểu học ABC",
-        time: "8:00",
-        arrivalTime: "8:30",
-        distance: "8.0km",
-        students: 30,
-        studentsReceived: 30,
-        issue: "Kẹt xe dẫn đến trễ 5 phút.",
-        status: "completed",
-      },
-    ],
-  });
+  const navigate = useNavigate();
+
+  // 2. STATE
+  const [loading, setLoading] = useState(true);
+  const [reportData, setReportData] = useState(null);
+  const [driverInfo, setDriverInfo] = useState({ name: "Tài xế", role: "Đang tải..." });
+
+  // 3. LOGIC API (Giống hệt trang Route)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Lấy User ID an toàn
+        const getUserId = () => {
+            const direct = localStorage.getItem('user_id');
+            if (direct) return direct;
+            try {
+                const userObj = JSON.parse(localStorage.getItem('user'));
+                return userObj?.user_id || userObj?.id;
+            } catch(e) { return null; }
+        };
+
+        const userId = getUserId();
+        if (!userId) {
+            // navigate('/login'); 
+            return;
+        }
+
+        const config = { headers: { 'x-user-id': userId } };
+
+        // A. Lấy Profile
+        try {
+            const profileRes = await axios.get('http://localhost:3000/api/driver-app/profile/me', config);
+            setDriverInfo({ 
+                name: profileRes.data.data.name, 
+                role: "Tài xế xe buýt" 
+            });
+        } catch (e) { console.error("Lỗi profile", e); }
+
+        // B. Lấy Báo cáo chuyến đi (Dựa vào chuyến hôm nay)
+        try {
+            const scheduleRes = await axios.get('http://localhost:3000/api/driver-app/trips/today', config);
+            const trips = scheduleRes.data.data;
+
+            if (trips && trips.length > 0) {
+                // Lấy trip_id mới nhất
+                const currentTripId = trips[0].trip_id; 
+                
+                // Gọi API chi tiết (Vì API này trả về cả summary và students)
+                const detailRes = await axios.get(`http://localhost:3000/api/driver-app/trip/details/${currentTripId}`, config);
+                setReportData(detailRes.data.data);
+            } else {
+                setReportData(null);
+            }
+        } catch (e) {
+            setReportData(null);
+        }
+
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
 
   const todayStr = useMemo(() => {
     try {
       return new Date().toLocaleDateString("vi-VN", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
+        weekday: "long", day: "2-digit", month: "long", year: "numeric",
       });
-    } catch {
-      return tripData.date;
-    }
-  }, [tripData.date]);
+    } catch { return "Hôm nay"; }
+  }, []);
 
+  // 4. HÀM RENDER NỘI DUNG CHÍNH
+  const renderMainContent = () => {
+    // A. Đang tải
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
+                <p>Đang tải báo cáo...</p>
+            </div>
+        );
+    }
+
+    // B. Không có dữ liệu
+    if (!reportData) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full p-10 text-center">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-gray-400">
+                    <CalendarX size={40} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800">Chưa có dữ liệu báo cáo</h3>
+                <p className="text-gray-500 mt-2 max-w-md">
+                    Bạn chưa thực hiện chuyến xe nào hôm nay để tạo báo cáo.
+                </p>
+                <button 
+                    onClick={() => window.location.reload()} 
+                    className="mt-6 px-6 py-2.5 bg-indigo-50 text-indigo-600 font-medium rounded-lg hover:bg-indigo-100 transition"
+                >
+                    Tải lại trang
+                </button>
+            </div>
+        );
+    }
+
+    // C. Có dữ liệu -> Hiển thị Báo cáo
+    const { summary, stops } = reportData;
+
+    return (
+        <div className="p-6 space-y-6">
+            {/* Thẻ tóm tắt nhanh (Dashboard Cards) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-blue-50 p-5 rounded-xl border border-blue-100 flex flex-col items-center justify-center shadow-sm">
+                    <p className="text-blue-600 text-xs font-bold uppercase tracking-wider mb-1">Tổng học sinh</p>
+                    <p className="text-4xl font-extrabold text-blue-800">{summary.total}</p>
+                </div>
+                <div className="bg-green-50 p-5 rounded-xl border border-green-100 flex flex-col items-center justify-center shadow-sm">
+                    <p className="text-green-600 text-xs font-bold uppercase tracking-wider mb-1">Đã đón</p>
+                    <p className="text-4xl font-extrabold text-green-800">{summary.picked_up}</p>
+                </div>
+                <div className="bg-red-50 p-5 rounded-xl border border-red-100 flex flex-col items-center justify-center shadow-sm">
+                    <p className="text-red-600 text-xs font-bold uppercase tracking-wider mb-1">Vắng mặt</p>
+                    <p className="text-4xl font-extrabold text-red-800">{summary.absent}</p>
+                </div>
+            </div>
+
+            {/* Danh sách trạm dừng đã qua */}
+            <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <div className="px-6 py-4 border-b bg-gray-50 flex items-center gap-2">
+                    <CheckCircle size={18} className="text-green-600" />
+                    <h2 className="text-lg font-bold text-gray-800">Tiến độ các điểm dừng</h2>
+                </div>
+                
+                <div className="p-0">
+                    {stops.map((stop, index) => (
+                        <div key={index} className="p-5 border-b last:border-0 hover:bg-gray-50 transition">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                                        {stop.order_index}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-gray-800 text-lg">{stop.name}</h4>
+                                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                                            <MapPin size={14} /> {stop.address || "Không có địa chỉ"}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide w-fit">
+                                    <CheckCircle size={14} />
+                                    Đã hoàn thành
+                                </span>
+                            </div>
+
+                            {/* Grid thông tin con */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50 rounded-lg p-3 mt-2">
+                                <div>
+                                    <p className="text-xs text-gray-500 uppercase">Thời gian đến</p>
+                                    <p className="text-sm font-semibold text-gray-900">07:00</p> {/* Mock data hoặc lấy từ API nếu có */}
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 uppercase">Trạng thái</p>
+                                    <p className="text-sm font-semibold text-green-600">Đúng giờ</p>
+                                </div>
+                                {/* Có thể thêm các thông tin khác nếu API trả về */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+  };
+
+  // 5. RETURN LAYOUT (Sidebar + Header cố định)
   return (
     <div className="flex min-h-screen bg-gray-50">
+      {/* A. Sidebar */}
       <Sidebar userRole="driver" />
 
-      <div className="flex-1">
-        <div className="bg-white border-b px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{tripData.title}</h1>
-              <p className="text-sm text-gray-500">{todayStr}</p>
-            </div>
-            <div className="flex items-center gap-5">
-              <div className="relative">
-                <Bell size={22} className="text-gray-600" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />
-              </div>
-              <div className="flex items-center">
-                <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2" />
-                <span className="text-sm text-gray-600 mr-4">{tripData.status}</span>
-                <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white mr-2">
-                  <Bus size={18} />
-                </div>
-                <div>
-                  <div className="font-medium">{tripData.driver.name}</div>
-                  <div className="text-xs text-gray-500">{tripData.driver.role}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* B. Header */}
+        <Header 
+            title="Báo cáo chuyến đi" 
+            subtitle={todayStr}
+            userName={driverInfo.name} 
+            userRole={driverInfo.role} 
+        />
 
-        <div className="p-6 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-800">Chi tiết các điểm dừng</h2>
-            </div>
-            <div className="p-6 space-y-6">
-              {tripData.stops.map((stop) => (
-                <div key={stop.id} className="bg-gray-50 border rounded-xl p-5">
-                  <div className="flex items-start justify-between pb-4 mb-4 border-b">
-                    <div>
-                      <div className="inline-flex items-center px-3 py-1 rounded-lg bg-green-600 text-white text-sm font-semibold">
-                        {stop.name}
-                      </div>
-                      <p className="mt-2 text-sm text-gray-600">
-                        <span className="font-medium text-gray-700">Điểm đến: </span>
-                        {stop.address}
-                      </p>
-                    </div>
-                    <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
-                      <CheckCircle size={18} />
-                      Đã hoàn thành
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    <div className="bg-white border rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Thời gian khởi hành</p>
-                      <p className="mt-1 text-sm font-semibold text-gray-900">{stop.time}</p>
-                    </div>
-                    <div className="bg-white border rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Thời gian đến</p>
-                      <p className="mt-1 text-sm font-semibold text-gray-900">{stop.arrivalTime}</p>
-                    </div>
-                    <div className="bg-white border rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Khoảng cách</p>
-                      <p className="mt-1 text-sm font-semibold text-gray-900">{stop.distance}</p>
-                    </div>
-                    <div className="bg-white border rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Số lượng học sinh</p>
-                      <p className="mt-1 text-sm font-semibold text-gray-900">{stop.students}</p>
-                    </div>
-                    <div className="bg-white border rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Số học sinh được trả</p>
-                      <p className="mt-1 text-sm font-semibold text-gray-900">{stop.studentsReceived}</p>
-                    </div>
-                    <div className="bg-white border-l-4 border-amber-400 rounded-lg p-4">
-                      <p className="text-xs uppercase tracking-wide text-gray-500">Sự cố</p>
-                      <p className="mt-1 text-sm text-gray-800">{stop.issue}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {tripData.stops.length === 0 && (
-                <div className="text-center text-gray-500 py-8">Không có dữ liệu chuyến đi.</div>
-              )}
-            </div>
-          </div>
+        {/* C. Nội dung */}
+        <div className="flex-1 overflow-y-auto">
+            {renderMainContent()}
         </div>
       </div>
     </div>
