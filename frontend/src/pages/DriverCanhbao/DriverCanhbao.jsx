@@ -8,13 +8,13 @@ import { useParams, useNavigate } from "react-router-dom"; // ⬅️ Dùng để
 import axios from "axios"; // ⬅️ Dùng để gọi API
 import { toast } from "react-toastify"; // ⬅️ Dùng để thông báo
 
-// Mảng các nút bấm nhanh
-const quickAlerts = [
-  { name: "Chậm trễ", type: "delayed", icon: FaClock, color: "text-blue-500" },
-  { name: "Kỹ thuật", type: "breakdown", icon: FaTools, color: "text-yellow-500" },
-  { name: "An toàn", type: "safety", icon: FaExclamationTriangle, color: "text-orange-500" },
-  { name: "Khẩn cấp", type: "emergency", icon: FaLock, color: "text-red-500" },
-];
+// // Mảng các nút bấm nhanh
+// const quickAlerts = [
+//   { name: "Chậm trễ", type: "delayed", icon: FaClock, color: "text-blue-500" },
+//   { name: "Kỹ thuật", type: "breakdown", icon: FaTools, color: "text-yellow-500" },
+//   { name: "An toàn", type: "safety", icon: FaExclamationTriangle, color: "text-orange-500" },
+//   { name: "Khẩn cấp", type: "emergency", icon: FaLock, color: "text-red-500" },
+// ];
 
 function DriverCanhbao() {
   const { user } = useContext(AppContext); // Lấy thông tin user đã đăng nhập
@@ -136,7 +136,7 @@ function DriverCanhbao() {
           </div>
 
           {/* Các nút bấm nhanh (Quick Buttons) */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {quickAlerts.map((alert) => (
               <button
                 key={alert.type}
@@ -148,7 +148,7 @@ function DriverCanhbao() {
                 <span className="mt-3 font-semibold text-lg">{alert.name}</span>
               </button>
             ))}
-          </div>
+          </div> */}
 
           {/* Phần nội dung chính (Form và Liên hệ) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
