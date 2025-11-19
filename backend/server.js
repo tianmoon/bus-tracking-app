@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { initializeMessageSocket } from './utils/messageSocket.js';
+import { initializeTrackingSocket } from './utils/trackingSocket.js';
 import studentRoutes from './routes/studentRoutes.js';
 import parentRoutes from './routes/parentRoutes.js';
 import busRoutes from './routes/busRoutes.js';
@@ -55,8 +56,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'API Quản lý học sinh' });
 })
 
-// Initialize Socket.IO message handling
+// Initialize Socket.IO handlers
 initializeMessageSocket(io);
+initializeTrackingSocket(io);
 
 // Export io để dùng trong các route khác
 export { io };
