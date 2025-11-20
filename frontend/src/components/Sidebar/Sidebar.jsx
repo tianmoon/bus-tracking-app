@@ -26,7 +26,7 @@ function Sidebar(props) {
 
     driver: [
       { icon: Route, label: 'Tuyến của tôi', path: '/driver/routes' },
-      { icon: Calendar, label: 'Ca làm việc', path: '/driver/schedule' },
+      { icon: Calendar, label: 'Ca làm việc', path: '/driver/schedules' },
       { icon: MessageSquare, label: 'Báo cáo', path: '/driver/reports' },
       { icon: AlertTriangle, label: 'Sự cố', path: '/driver/issues' },
       { icon: Users, label: 'Học sinh', path: '/driver/students' },

@@ -73,6 +73,67 @@ export const createDriver = async (req, res) => {
         });
     }
 }
+// ==========================================
+// 🚀 PHẦN MỚI: API CHO APP TÀI XẾ
+// ==========================================
 
+// 1. Lấy dữ liệu tổng quan cho Dashboard (Profile + Lịch trình)
+export const getDriverDashboardInfo = async (req, res) => {
+    try {
+        // Giả sử userId được gửi qua header 'x-user-id' (giống cách mình làm ở DriverRoute)
+        const userId = req.headers['x-user-id']; 
+        
+        if (!userId) {
+            return res.status(401).json({ status: 'fail', message: 'Chưa đăng nhập' });
+        }
+
+        // A. Lấy thông tin tài xế
+        const driverInfo = await Driver.getProfileByUserId(userId);
+        
+        if (!driverInfo) {
+            return res.status(404).json({ status: 'fail', message: 'Không tìm thấy hồ sơ tài xế' });
+        }
+
+        // B. Lấy lịch trình hôm nay của tài xế đó
+        const todayTrips = await Driver.getScheduleToday(driverInfo.driver_id);
+
+        // Trả về cả 2 cục dữ liệu
+        res.status(200).json({
+            status: 'success',
+            data: {
+                profile: driverInfo,
+                trips: todayTrips
+            }
+        });
+
+    } catch (error) {
+        console.error('Lỗi Dashboard:', error);
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+}
+
+
+// API: Tài xế cập nhật trạng thái chuyến đi (Bắt đầu / Kết thúc)
+export const updateTripStatus = async (req, res) => {
+    try {
+        const { tripId, status } = req.body; // status: 'ongoing' hoặc 'completed'
+        
+        // Validate trạng thái cho phép
+        if (!['ongoing', 'completed','preparation'].includes(status)) {
+            return res.status(400).json({ status: 'fail', message: 'Trạng thái không hợp lệ' });
+        }
+
+        // Cập nhật DB
+        await db.query(
+            'UPDATE Trip SET status = ? WHERE trip_id = ?', 
+            [status, tripId]
+        );
+
+        res.json({ status: 'success', message: 'Cập nhật trạng thái thành công' });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+}
+// ... (giữ nguyên các code cũ của bạn)
 
 

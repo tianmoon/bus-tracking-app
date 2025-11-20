@@ -153,7 +153,3 @@ export const deleteSchedule = async (req, res) => {
         });
     }
 };
-
-
-
-

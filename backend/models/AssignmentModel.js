@@ -84,5 +84,6 @@ class AssignmentModel {
             throw new Error('Lỗi khi kiểm tra lịch trình đã được phân công trong cơ sở dữ liệu');
         }
     }
+  
 }
 export default AssignmentModel;

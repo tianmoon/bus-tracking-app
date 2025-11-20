@@ -65,14 +65,16 @@ export async function createAssignment(req, res) {
                 code: 400
             });
         }
-
         const newAssignment = await Assignment.create(assignmentData);
+        
+       
         res.status(201).json({
             status: 'success',
             data: newAssignment,
             message: 'Thêm assignment mới thành công'
         });
     }
+
     catch (error) {
         res.status(500).json({
             status: 'error',
@@ -118,4 +120,3 @@ export async function updateAssignment(req, res) {
         });
     }
 }
-

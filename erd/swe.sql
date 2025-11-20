@@ -101,7 +101,7 @@ CREATE TABLE `Assignment` (
 -- ======================
 CREATE TABLE `Trip` (
   `trip_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `status` ENUM('completed','ongoing','cancelled'),
+  `status` ENUM('preparation','completed','ongoing','cancelled'),
   `departure_time` DATETIME,
   `arrival_time` DATETIME,
   `asn_id` INT,
