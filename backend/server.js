@@ -16,12 +16,13 @@ import assignmentRoutes from './routes/assignmentRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import tripRoutes from './routes/tripRoutes.js';
-
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Initialize Express 
 const app = express();
 // Create HTTP server
 const httpServer = createServer(app);
+
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
@@ -50,17 +51,37 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/trips', tripRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Route mặc định
 app.get('/', (req, res) => {
   res.json({ message: 'API Quản lý học sinh' });
 })
 
-// Initialize Socket.IO handlers
+// --- QUAN TRỌNG: Cấu hình Socket để Controller có thể gọi được ---
+app.set('io', io); 
+
+// --- QUAN TRỌNG: Xử lý Logic Join Room trực tiếp tại đây để đảm bảo kết nối ---
+io.on("connection", (socket) => {
+  // Log khi có người kết nối
+  console.log(`⚡ Client connected: ${socket.id}`);
+
+  // Lắng nghe sự kiện xin vào phòng từ Frontend (Driver/Parent/Admin)
+  socket.on("join-room", (room) => {
+    socket.join(room); // Cho socket này vào phòng
+    console.log(`✅ User ${socket.id} joined room: ${room}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`❌ Client disconnected: ${socket.id}`);
+  });
+});
+
+// Initialize other Socket.IO handlers (Nếu trong này chưa có logic join-room)
 initializeMessageSocket(io);
 initializeTrackingSocket(io);
 
-// Export io để dùng trong các route khác
+// Export io để dùng trong các route khác nếu cần
 export { io };
 
 // Start the server

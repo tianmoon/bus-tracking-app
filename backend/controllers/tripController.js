@@ -155,3 +155,40 @@ export const getStudentsByTrip = async (req, res) => {
         });
     }
 }
+export const getTripReport = async (req, res) => {
+    try {
+        const tripId = req.params.tripId; // Lấy ID từ URL
+        const report = await Trip.getTripSummary(tripId);
+
+        if (!report) {
+            return res.status(404).json({ status: 'fail', message: 'Không tìm thấy chuyến đi' });
+        }
+
+        res.status(200).json({ status: 'success', data: report });
+    } catch (error) {
+        console.error("Lỗi getTripReport:", error);
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+};
+
+
+// API MỚI: Lấy chuyến đi hôm nay cho Driver
+export const getDriverTripsToday = async (req, res) => {
+    try {
+        // Lấy driverId từ header (do frontend gửi lên) hoặc từ token decode
+        const driverId = req.headers['x-user-id']; 
+        
+        if (!driverId) {
+            return res.status(400).json({ status: 'fail', message: 'Thiếu Driver ID' });
+        }
+
+        const trips = await Trip.getTripsByDriverToday(driverId);
+
+        res.status(200).json({
+            status: 'success',
+            data: trips
+        });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+};

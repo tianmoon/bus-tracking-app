@@ -71,26 +71,31 @@ function DashboardTaixeContent() {
 
   // 4. Hàm xử lý bấm nút "Bắt đầu chạy"
   const handleStartTrip = async (tripId) => {
+    // 1. Xác nhận hành động để tránh bấm nhầm
     if (!window.confirm("Xác nhận bắt đầu chuyến xe này?")) return;
 
     try {
-        // Gọi API thật để update trạng thái trong DB
-        const res = await axios.patch('http://localhost:5000/api/drivers/app/trip/status', {
+        // 2. Gọi API cập nhật trạng thái (SỬA LẠI METHOD VÀ URL)
+        // Method: PUT (khớp với driverRoutes.js)
+        // URL: /api/drivers/trip/status (bỏ chữ /app thừa)
+        const res = await axios.put('http://localhost:5000/api/drivers/trip/status', {
             tripId: tripId,
-            status: 'ongoing' // Chuyển sang ĐANG CHẠY
+            status: 'ongoing' // Chuyển trạng thái sang "Đang chạy"
         });
 
         if (res.data.status === 'success') {
-            alert("Đã bắt đầu chuyến xe! Chúc thượng lộ bình an.");
-            
-            // Cập nhật lại State giao diện ngay lập tức
+            // 3. Cập nhật giao diện ngay lập tức (Optimistic UI Update)
+            // Duyệt qua danh sách chuyến đi cũ, tìm chuyến vừa bấm và đổi status của nó
             setTrips(prevTrips => prevTrips.map(trip => 
                 trip.trip_id === tripId ? { ...trip, status: 'ongoing' } : trip
             ));
+            
+            // (Tùy chọn) Thông báo nhỏ
+            // alert("Đã bắt đầu chuyến xe!");
         }
     } catch (error) {
-        console.error("Lỗi update status:", error);
-        alert("Lỗi khi cập nhật trạng thái. Vui lòng thử lại.");
+        console.error("Lỗi cập nhật trạng thái:", error);
+        alert("Lỗi kết nối Server. Vui lòng kiểm tra lại mạng hoặc Server.");
     }
   };
 

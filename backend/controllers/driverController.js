@@ -1,4 +1,5 @@
 import Driver from '../models/DriverModel.js';
+import db from '../config/database.js'; 
 import { createDriverService } from '../services/driverService.js';
 
 // Lấy tất cả tài xế

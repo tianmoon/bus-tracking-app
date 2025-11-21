@@ -1,15 +1,22 @@
 import { Router } from 'express';
-import { getAllStudents, getStudentById, createStudent } from '../controllers/studentController.js';
+import { 
+    getAllStudents, 
+    getStudentById, 
+    createStudent, 
+    getStudentsByTripId,    // Import mới
+    updateStudentTripStatus // Import mới
+} from '../controllers/studentController.js';
 
 const router = Router();
 
-// GET - Lấy tất cả học sinh
 router.get('/', getAllStudents);
-
-// GET - Lấy học sinh theo ID
-router.get('/:id', getStudentById);
-
-// POST - Thêm học sinh mới
 router.post('/', createStudent);
+
+// --- ROUTE CHO DRIVER ---
+router.get('/trip/:tripId', getStudentsByTripId); // Lấy DS học sinh theo Trip
+router.post('/status', updateStudentTripStatus);  // Cập nhật trạng thái (Đón/Trả)
+// ------------------------
+
+router.get('/:id', getStudentById);
 
 export default router;

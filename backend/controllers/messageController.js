@@ -20,11 +20,13 @@ export const getAllMessagesByRoom = async (req, res) => {
     }
 };
 
-// Thêm tin nhắn mới
+// Thêm tin nhắn mới (SỬA PHẦN NÀY)
 export const createMessage = async (req, res) => {
     try {
         const messageData = req.body;
-        if (!messageData.content || !messageData.sender_id|| !messageData.room) {
+        
+        // 1. Validate
+        if (!messageData.content || !messageData.sender_id || !messageData.room) {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Thiếu thông tin bắt buộc: content, sender_id, room',
@@ -32,7 +34,31 @@ export const createMessage = async (req, res) => {
             });
         }
 
+        // 2. Lưu vào Database (Code cũ của em)
         const newMessage = await Message.create(messageData);
+
+        // 3. --- BẮN SOCKET (PHẦN CÒN THIẾU) ---
+        // Lấy biến io từ server.js
+        const io = req.app.get('io'); 
+
+        if (io) {
+            // Chuẩn bị gói tin để gửi realtime
+            const socketData = {
+                msg_id: newMessage.id,
+                content: messageData.content,
+                sender: messageData.sender || "Quản trị viên", // Tên người gửi (hoặc em query user để lấy tên thật)
+                sender_id: messageData.sender_id,
+                timestamp: new Date(),
+                room: messageData.room
+            };
+
+            // Gửi tin nhắn đến đúng phòng (driver hoặc parent)
+            io.to(messageData.room).emit('receive-message', socketData);
+            
+            console.log(`>> Đã bắn socket tin nhắn tới phòng ${messageData.room}:`, socketData.content);
+        }
+        // ---------------------------------------
+
         res.status(201).json({
             status: 'success',
             data: newMessage,
@@ -40,6 +66,7 @@ export const createMessage = async (req, res) => {
         });
     }
     catch (error) {
+        console.error("Lỗi createMessage:", error);
         res.status(500).json({
             status: 'error',
             message: error.message,
@@ -47,5 +74,3 @@ export const createMessage = async (req, res) => {
         });
     }
 };
-
-

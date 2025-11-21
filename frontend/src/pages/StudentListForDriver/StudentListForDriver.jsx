@@ -1,190 +1,126 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+import Header from '../../components/Header.jsx';
 import axios from 'axios';
-import { ArrowLeft } from 'lucide-react';
+import { AppContext } from '../../context/AppContext';
+import { ChevronDown, ChevronUp, Bus, MapPin, CheckCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
 
-// Import các component chung
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Header from "../../components/Header";
-
-function StudentListForDriver() {
-    const { tripId } = useParams();
-    const navigate = useNavigate();
-
-    // State lưu thông tin
-    const [driverInfo, setDriverInfo] = useState({ name: "Tài xế", role: "Đang tải..." });
-    const [tripInfo, setTripInfo] = useState(null);
+// --- COMPONENT CON: HIỂN THỊ HỌC SINH CỦA 1 CHUYẾN ---
+const TripStudentList = ({ tripId }) => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // 1. LẤY DỮ LIỆU TỪ API KHI VÀO TRANG
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchStudents = async () => {
             try {
-                // Lấy thông tin tài xế từ LocalStorage
-                const storedUser = localStorage.getItem('user');
-                if (!storedUser) return;
-                const currentUser = JSON.parse(storedUser);
-
-                setDriverInfo({ name: currentUser.name || "Tài xế", role: "Tài xế xe buýt" });
-
-                // Gọi API lấy danh sách học sinh theo Trip ID
-                // (Backend cần trả về JSON: { data: { trip: {...}, students: [...] } })
-                const res = await axios.get(`http://localhost:5000/api/trips/${tripId}/students`);
-                
-                if (res.data.status === 'success') {
-                    setStudents(res.data.data.students);
-                    setTripInfo(res.data.data.trip);
-                }
-            } catch (error) {
-                console.error("Lỗi tải dữ liệu:", error);
-                toast.error("Không thể tải danh sách học sinh.");
-            } finally {
-                setLoading(false);
-            }
+                const res = await axios.get(`http://localhost:5000/api/students/trip/${tripId}`);
+                if (res.data.status === 'success') setStudents(res.data.data);
+            } catch (err) { console.error(err); } 
+            finally { setLoading(false); }
         };
-
-        fetchData();
+        fetchStudents();
     }, [tripId]);
 
-    // 2. HÀM XỬ LÝ NÚT BẤM TRẠNG THÁI (ĐƠN GIẢN HÓA)
-    // Logic: Chưa đón -> Đã đón -> Đã trả
-    const handleStatusChange = async (studentId, currentStatus) => {
-        let newStatus = 'picked_up'; // Mặc định bấm vào là "Đã đón"
-        
-        if (currentStatus === 'picked_up') {
-            newStatus = 'dropped_off'; // Nếu đang là "Đã đón" thì bấm tiếp thành "Đã trả"
-        } else if (currentStatus === 'dropped_off') {
-             return; // Đã trả rồi thì thôi (hoặc bạn muốn cho phép quay lại thì sửa ở đây)
-        }
-
+    const handleStatusUpdate = async (studentId, nextStatus) => {
         try {
-            // Gọi API cập nhật
-            await axios.post(`http://localhost:5000/api/reports/update-status`, {
-                trip_id: tripId,
-                student_id: studentId,
-                status: newStatus
+            await axios.post('http://localhost:5000/api/students/status', {
+                tripId, studentId, status: nextStatus
             });
+            setStudents(prev => prev.map(s => s.student_id === studentId ? { ...s, trip_status: nextStatus } : s));
+            toast.success("Đã cập nhật trạng thái!");
+        } catch (e) { toast.error("Lỗi cập nhật"); }
+    };
 
-            // Cập nhật giao diện ngay lập tức (không cần load lại trang)
-            setStudents(prev => prev.map(s => 
-                s.id === studentId ? { ...s, status: newStatus } : s
-            ));
-            
-            if (newStatus === 'picked_up') toast.success("Đã đón học sinh lên xe");
-            if (newStatus === 'dropped_off') toast.success("Đã trả học sinh xuống xe");
+    if (loading) return <p className="text-sm text-gray-500 p-4">Đang tải danh sách...</p>;
+    if (students.length === 0) return <p className="text-sm text-gray-500 p-4">Không có học sinh.</p>;
 
-        } catch (error) {
-            console.error("Lỗi cập nhật:", error);
-            toast.error("Lỗi kết nối server");
-        }
+    return (
+        <div className="border-t border-gray-100 bg-gray-50 p-4 space-y-3">
+            {students.map(st => (
+                <div key={st.student_id} className="flex justify-between items-center bg-white p-3 rounded shadow-sm">
+                    <div>
+                        <p className="font-bold text-gray-800">{st.name}</p>
+                        <p className="text-xs text-gray-500">Lớp: {st.grade}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        {!st.trip_status && (
+                            <button onClick={() => handleStatusUpdate(st.student_id, 'picked_up')} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded text-sm font-bold">Đón</button>
+                        )}
+                        {st.trip_status === 'picked_up' && (
+                            <button onClick={() => handleStatusUpdate(st.student_id, 'dropped_off')} className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm font-bold">Trả</button>
+                        )}
+                        {st.trip_status === 'dropped_off' && (
+                            <span className="text-green-600 text-sm font-bold flex items-center gap-1"><CheckCircle size={14}/> Xong</span>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// --- COMPONENT CHÍNH ---
+function StudentListForDriver() {
+    const { user } = useContext(AppContext);
+    const [trips, setTrips] = useState([]);
+    const [expandedTripId, setExpandedTripId] = useState(null);
+
+    useEffect(() => {
+        if (!user) return;
+        // Lấy danh sách chuyến đi hôm nay
+        axios.get('http://localhost:5000/api/trips/driver/today', { headers: { 'x-user-id': user.user_id } })
+            .then(res => setTrips(res.data.data))
+            .catch(err => console.error(err));
+    }, [user]);
+
+    const toggleTrip = (id) => {
+        setExpandedTripId(expandedTripId === id ? null : id);
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50 font-sans">
-            {/* Sidebar dùng chung */}
+        <div className="flex min-h-screen bg-gray-50">
             <Sidebar userRole='driver' />
-
-            {/* Main Content */}
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                {/* Header dùng chung */}
-                <Header 
-                    title="Danh sách học sinh trong ngày" 
-                    subtitle={new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                    userName={driverInfo.name}
-                    userRole={driverInfo.role}
-                />
-
-                <div className="flex-1 overflow-y-auto">
+                <Header title="Danh sách Học sinh" userRole="Tài xế" />
+                <div className="flex-1 overflow-y-auto p-6">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">Các chuyến đi hôm nay</h2>
                     
-                    {/* Thanh tiêu đề điểm đón (Giống ảnh mẫu màu xanh) */}
-                    <div className="bg-indigo-600 text-white px-6 py-4 flex items-center justify-between shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <button onClick={() => navigate(-1)} className="hover:bg-indigo-700 p-1 rounded-full transition" title="Quay lại">
-                                <ArrowLeft size={24} />
-                            </button>
-                            <h2 className="text-xl font-bold">
-                                {tripInfo ? `Điểm đón: ${tripInfo.start_point || '...'}` : "Đang tải thông tin..."}
-                            </h2>
-                        </div>
-                        {tripInfo && (
-                            <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">
-                                Xe: {tripInfo.plate_number}
-                            </span>
-                        )}
-                    </div>
+                    <div className="space-y-4 max-w-3xl">
+                        {trips.map(trip => (
+                            <div key={trip.trip_id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                                {/* Header của Card Trip - Bấm vào để mở rộng */}
+                                <div 
+                                    onClick={() => toggleTrip(trip.trip_id)}
+                                    className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                            <Bus size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-800">{trip.route_name}</h3>
+                                            <p className="text-xs text-gray-500">
+                                                {new Date(trip.departure_time).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {expandedTripId === trip.trip_id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                </div>
 
-                    {/* Tiêu đề bảng (Màu xám nhạt giống ảnh) */}
-                    <div className="bg-gray-200 px-6 py-3 border-b border-gray-300">
-                        <h3 className="font-bold text-gray-700">Danh sách học sinh</h3>
-                    </div>
-
-                    {/* Bảng danh sách */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                {/* Header bảng màu xanh đậm giống ảnh */}
-                                <tr className="bg-indigo-600 text-white">
-                                    <th className="px-6 py-4 text-left font-bold w-20">Id</th>
-                                    <th className="px-6 py-4 text-left font-bold">Tên</th>
-                                    <th className="px-6 py-4 text-left font-bold w-32">Lớp</th>
-                                    <th className="px-6 py-4 text-right font-bold w-48">Tình trạng</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-100">
-                                {loading ? (
-                                    <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Đang tải danh sách...</td></tr>
-                                ) : students.length === 0 ? (
-                                    <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Chưa có dữ liệu học sinh.</td></tr>
-                                ) : (
-                                    students.map((student) => (
-                                        <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4 font-medium text-gray-900">{student.id}</td>
-                                            <td className="px-6 py-4 font-bold text-gray-800">{student.name}</td>
-                                            <td className="px-6 py-4 font-medium text-gray-600">{student.class}</td>
-                                            
-                                            {/* Cột Tình Trạng (Chứa nút bấm) */}
-                                            <td className="px-6 py-4 text-right">
-                                                <StatusButton 
-                                                    status={student.status} 
-                                                    onClick={() => handleStatusChange(student.id, student.status)} 
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))
+                                {/* Phần nội dung danh sách học sinh (Sổ ra khi bấm) */}
+                                {expandedTripId === trip.trip_id && (
+                                    <TripStudentList tripId={trip.trip_id} />
                                 )}
-                            </tbody>
-                        </table>
+                            </div>
+                        ))}
+                        
+                        {trips.length === 0 && <p className="text-center text-gray-500">Hôm nay không có chuyến nào.</p>}
                     </div>
                 </div>
             </div>
         </div>
     );
 }
-
-// Component Nút Trạng Thái (Thay đổi màu sắc và chữ dựa trên status)
-const StatusButton = ({ status, onClick }) => {
-    let bgClass = "bg-gray-200 hover:bg-gray-300 text-gray-600"; // Mặc định (Chưa đón)
-    let text = "Chưa đón";
-
-    if (status === 'picked_up') {
-        bgClass = "bg-green-500 hover:bg-green-600 text-white shadow-md"; // Màu xanh lá (Đã đón)
-        text = "Đã đón";
-    } else if (status === 'dropped_off') {
-        bgClass = "bg-indigo-500 hover:bg-indigo-600 text-white shadow-md"; // Màu xanh dương (Đã trả)
-        text = "Đã trả";
-    }
-
-    return (
-        <button 
-            onClick={onClick}
-            className={`px-4 py-2 rounded font-bold text-sm transition-all active:scale-95 ${bgClass}`}
-            style={{ minWidth: '100px', textAlign: 'center' }}
-        >
-            {text}
-        </button>
-    );
-};
 
 export default StudentListForDriver;
