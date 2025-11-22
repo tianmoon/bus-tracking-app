@@ -93,6 +93,7 @@ function DashboardTaixeContent() {
             // (Tùy chọn) Thông báo nhỏ
             // alert("Đã bắt đầu chuyến xe!");
         }
+        // navigate('/driver/routes', { state: {}})
     } catch (error) {
         console.error("Lỗi cập nhật trạng thái:", error);
         alert("Lỗi kết nối Server. Vui lòng kiểm tra lại mạng hoặc Server.");
@@ -108,7 +109,8 @@ function DashboardTaixeContent() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar userRole="driver" />
-
+        {console.log("Driver Info:", driverInfo)}
+        {console.log("Trips Data:", trips)}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header 
             title="Lịch chạy hôm nay" 

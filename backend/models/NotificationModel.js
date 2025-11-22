@@ -5,12 +5,12 @@ class NotificationModel {
     // Tạo thông báo mới
     static async create(data) {
         try {
-            const { content, type, trip_id } = data;
+            const { content, type, trip_id, room } = data;
             // status mặc định là 'unread', sent_time dùng NOW()
             const [result] = await db.query(
-                `INSERT INTO notification (content, type, sent_time, status, trip_id) 
-                 VALUES (?, ?, NOW(), 'unread', ?)`,
-                [content, type, trip_id]
+                `INSERT INTO notification (content, type, sent_time, status, trip_id, room) 
+                 VALUES (?, ?, NOW(), 'unread', ?, ?)`,
+                [content, type, trip_id, room]
             );
             
             return result.insertId; // Trả về ntf_id vừa tạo

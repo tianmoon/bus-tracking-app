@@ -38,7 +38,8 @@ function BusTrackingAdmin() {
         const statusMap = {
             completed: "Hoàn thành",
             ongoing: "Đang diễn ra",
-            cancelled: "Chưa hoàn thành"
+            cancelled: "Chưa hoàn thành",
+            preparation: "Chuẩn bị"
         }
         return statusMap[status] || "Không xác định";
     }
