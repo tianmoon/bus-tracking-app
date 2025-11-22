@@ -5,7 +5,7 @@ import Notification from '../models/NotificationModel.js';
 // Giả sử em dùng global.io hoặc import io từ file server
 export const createAlert = async (req, res) => {
     try {
-        const { tripId, type, content } = req.body;
+        const { tripId, type, content, room } = req.body;
 
         // 1. Validate dữ liệu đầu vào cho khớp với ENUM trong DB
         // DB của em chỉ có: 'delayed', 'arrival', 'breakdown'
@@ -16,7 +16,8 @@ export const createAlert = async (req, res) => {
         const newNotifId = await Notification.create({
             content: content,
             type: finalType,
-            trip_id: tripId
+            trip_id: tripId, 
+            room: room
         });
 
         const newNotificationData = {
@@ -34,12 +35,12 @@ export const createAlert = async (req, res) => {
         // nhưng chuẩn nhất là server bắn xuống:
         
         // Cách lấy IO từ req (nếu em setup ở server.js: app.set('io', io))
-        const io = req.app.get('io'); 
-        if (io) {
-            // Gửi cho Admin
-            io.emit('new-notification', newNotificationData);
-            console.log("Đã bắn socket notification:", newNotificationData);
-        }
+        // const io = req.app.get('io'); 
+        // if (io) {
+        //     // Gửi cho Admin
+        //     io.emit('send-notification', newNotificationData);
+        //     console.log("Đã bắn socket notification:", newNotificationData);
+        // }
 
         res.status(201).json({
             status: 'success',

@@ -5,6 +5,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { initializeMessageSocket } from './utils/messageSocket.js';
 import { initializeTrackingSocket } from './utils/trackingSocket.js';
+import { initializeNotificationSocket } from './utils/notificationSocket.js';
 import studentRoutes from './routes/studentRoutes.js';
 import parentRoutes from './routes/parentRoutes.js';
 import busRoutes from './routes/busRoutes.js';
@@ -80,6 +81,7 @@ io.on("connection", (socket) => {
 // Initialize other Socket.IO handlers (Nếu trong này chưa có logic join-room)
 initializeMessageSocket(io);
 initializeTrackingSocket(io);
+initializeNotificationSocket(io);
 
 // Export io để dùng trong các route khác nếu cần
 export { io };

@@ -21,12 +21,19 @@ export const NotificationProvider = ({ children }) => {
       // 1. LOGIC JOIN ROOM (Giữ nguyên logic cũ của em + Thêm Admin)
       const room = user.role === 'parent' ? 'parent' 
                  : user.role === 'driver' ? 'driver' 
-                 : user.role === 'admin' ? 'admin' // <--- Thêm dòng này cho Admin
+                 : user.role === 'manager' ? 'manager' // <--- Thêm dòng này cho Admin
                  : null;
+
+      const room1 = user.role === 'manager' || user.role === 'parent' ? 'all' : null; 
       
       if (room) {
         socket.emit('join-room', room);
         console.log(`Joined room: ${room}`);
+      }
+
+      if (room1) {
+        socket.emit('join-room', room1);
+        console.log(`Joined room: ${room1}`);
       }
 
       // 2. LẮNG NGHE TIN NHẮN CHAT (Giữ nguyên code cũ của em)
@@ -42,14 +49,14 @@ export const NotificationProvider = ({ children }) => {
         };
         
         addNotification(newNotif);
-        toast.info(`💬 ${sender}: ${content}`);
+        toast.info(`${sender}: ${content}`);
       };
 
       // 3. LẮNG NGHE CẢNH BÁO TỪ DRIVER (Code mới thêm vào)
       const handleNewAlert = (data) => {
         // data: { id, content, type, trip_id, timestamp, sender }
         const newAlert = {
-          id: data.id || Date.now(),
+          id: Date.now(),
           message: data.content,
           sender: data.sender || "HỆ THỐNG CẢNH BÁO",
           timestamp: data.timestamp || new Date(),
@@ -60,7 +67,7 @@ export const NotificationProvider = ({ children }) => {
 
         addNotification(newAlert);
         // Hiện Toast màu đỏ hoặc cảnh báo đặc biệt
-        toast.error(`🚨 CẢNH BÁO: ${data.content}`, {
+        toast.error(`CẢNH BÁO: ${data.content}`, {
             autoClose: 8000, // Hiện lâu hơn chút
         });
       };
