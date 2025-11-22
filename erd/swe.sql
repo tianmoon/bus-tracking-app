@@ -128,6 +128,7 @@ CREATE TABLE `Notification` (
   `sent_time` DATETIME,
   `status` ENUM('read','unread') DEFAULT 'unread',
   `trip_id` INT,
+  `room` ENUM('all'),
   CONSTRAINT `fk_notification_trip` FOREIGN KEY (`trip_id`) REFERENCES `Trip`(`trip_id`)
 );
 -- ======================
