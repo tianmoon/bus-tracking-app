@@ -1,220 +1,262 @@
-import React, { useState, useEffect, useContext } from "react";
-// Giả sử file CSS cũ của em không cần nữa vì dùng Tailwind
-// import "./DashboardTaixe.css"; 
-import { FaBus, FaRegClock, FaRoute, FaSpinner } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // ⬅️ Dùng để chuyển trang
-import Sidebar from "../../components/Sidebar/Sidebar"; // ⬅️ Dùng Sidebar
-import Header from "../../components/Header";   // ⬅️ Dùng Header
-import { AppContext } from "../../context/AppContext"; // ⬅️ Dùng để lấy user
-import axios from "axios"; // ⬅️ Dùng để gọi API
-import { toast } from "react-toastify"; // ⬅️ Dùng để thông báo
+import React, { useState, useEffect } from "react";
+import { useNavigate, BrowserRouter } from "react-router-dom";
+import axios from "axios";
 
-// Hàm helper để format giờ (ví dụ: 06:00)
-const formatTime = (dateTimeString) => {
-  if (!dateTimeString) return "N/A";
-  const date = new Date(dateTimeString);
-  return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-};
+// ==========================================================================
+// ⚠️ HƯỚNG DẪN COPY VÀO DỰ ÁN THẬT (QUAN TRỌNG)
+// ==========================================================================
 
-// Hàm helper để lấy ngày hôm nay
-const getTodayDate = () => {
-  return new Date().toLocaleDateString('vi-VN', { 
-    weekday: 'long', 
-    day: '2-digit', 
-    month: 'long', 
-    year: 'numeric' 
-  });
-};
+import { FaClock, FaBus, FaMapMarkerAlt, FaCalendarDay, FaPlay, FaCheckCircle } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Header from "../../components/Header"; 
 
-function DashboardTaixe() {
-  // === 1. TẠO CÁC STATE ĐỂ LƯU DỮ LIỆU ===
-  const [trips, setTrips] = useState([]); // Lưu danh sách chuyến (Chuyến sáng, chiều)
-  const [loading, setLoading] = useState(true); // Trạng thái "Đang tải..."
-  const [error, setError] = useState(null); // Báo lỗi nếu API hỏng
+function DashboardTaixeContent() {
+  const navigate = useNavigate();
 
-  const { user } = useContext(AppContext); // Lấy user đã đăng nhập
-  const navigate = useNavigate(); // Dùng để chuyển trang
+  // 2. State
+  const [driverInfo, setDriverInfo] = useState({ name: "Tài xế", role: "Đang tải..." });
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // === 2. GỌI API KHI TRANG ĐƯỢC MỞ ===
+  // 3. API Lấy dữ liệu thật
   useEffect(() => {
-    // Nếu chưa đăng nhập (chưa có user_id), không làm gì cả
-    if (!user || !user.user_id) {
-      setLoading(false);
-      setError("Vui lòng đăng nhập để xem lịch trình.");
-      // Em có thể thêm: navigate('/'); để đá về trang login
-      return;
-    }
-
-    const fetchTrips = async () => {
-      setLoading(true);
-      setError(null);
-      
-      // Tạo "thẻ tên" (header) để xác thực theo cách của em
-      const config = {
-        headers: { 'x-user-id': user.user_id }
-      };
-
+    const fetchDashboardData = async () => {
       try {
-        // Gọi API mà chúng ta đã test bằng Postman
-        const tripsRes = await axios.get('http://localhost:5000/api/driver/trips/today', config);
+        const storedUser = localStorage.getItem('user');
+        
+        // Kiểm tra đăng nhập
+        if (!storedUser) {
+            console.warn("Chưa đăng nhập: Không tìm thấy user trong LocalStorage");
+            setLoading(false);
+            return;
+        }
 
-        // Lưu dữ liệu lấy được từ "Nhà bếp" vào state
-        setTrips(tripsRes.data.data);
+        const currentUser = JSON.parse(storedUser);
+        const userId = currentUser.user_id; 
 
-      } catch (err) {
-        console.error("Lỗi khi tải lịch trình:", err);
-        setError("Không thể tải được lịch trình. Vui lòng thử lại.");
-        toast.error("Không thể tải được lịch trình.");
+        if (!userId) {
+             console.error("Lỗi dữ liệu user: Thiếu user_id");
+             setLoading(false);
+             return;
+        }
+
+        // Gọi API thật lấy lịch trình hôm nay
+        const res = await axios.get('http://localhost:5000/api/drivers/app/dashboard', {
+            headers: { 'x-user-id': userId }
+        });
+
+        if (res.data.status === 'success') {
+            setDriverInfo({
+                name: res.data.data.profile?.name || "Tài xế",
+                role: "Tài xế xe buýt"
+            });
+            
+            const rawTrips = res.data.data.trips || [];
+            
+            // Sắp xếp: Chuyến nào "Chuẩn bị" (preparation) đưa lên đầu cho dễ bấm
+            const sortedTrips = rawTrips.sort((a, b) => 
+                new Date(a.start_time) - new Date(b.start_time)
+            );
+            setTrips(sortedTrips);
+        }
+      } catch (error) {
+        console.error("Lỗi kết nối API:", error);
       } finally {
-        setLoading(false); // Dừng loading, dù thành công hay thất bại
+        setLoading(false);
       }
     };
 
-    fetchTrips();
-  }, [user]); // Chạy lại hàm này khi 'user' thay đổi (tức là sau khi login)
+    fetchDashboardData();
+  }, [navigate]);
 
-  // === 3. HÀM XỬ LÝ KHI BẤM VÀO 1 CHUYẾN ===
-  const handleTripClick = (tripId) => {
-    // Chuyển trang sang trang "Chi Tiết Tuyến" của em
-    // và mang theo "trip_id" trên URL
-    // (Lưu ý: Em phải sửa App.js thành /driver/route/:id)
-    navigate(`/driver/route/${tripId}`); 
-  };
+  // 4. Hàm xử lý bấm nút "Bắt đầu chạy"
+  const handleStartTrip = async (tripId) => {
+    // 1. Xác nhận hành động để tránh bấm nhầm
+    if (!window.confirm("Xác nhận bắt đầu chuyến xe này?")) return;
 
-  // === 4. HÀM ĐỂ "VẼ" NỘI DUNG CHÍNH ===
-  const renderContent = () => {
-    // Trạng thái đang tải...
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center h-64">
-          <FaSpinner className="animate-spin text-indigo-600" size={40} />
-          <span className="ml-3 text-lg text-gray-700">Đang tải lịch làm việc...</span>
-        </div>
-      );
-    }
+    try {
+        // 2. Gọi API cập nhật trạng thái (SỬA LẠI METHOD VÀ URL)
+        // Method: PUT (khớp với driverRoutes.js)
+        // URL: /api/drivers/trip/status (bỏ chữ /app thừa)
+        const res = await axios.put('http://localhost:5000/api/drivers/trip/status', {
+            tripId: tripId,
+            status: 'ongoing' // Chuyển trạng thái sang "Đang chạy"
+        });
 
-    // Trạng thái lỗi
-    if (error) {
-      return (
-        <div className="flex justify-center items-center h-64">
-          <span className="text-lg text-red-600">{error}</span>
-        </div>
-      );
-    }
-
-    // Trạng thái không có chuyến (Admin chưa phân công)
-    if (trips.length === 0) {
-      return (
-        <div className="text-center text-gray-500 py-20">
-          <FaBus size={60} className="mx-auto text-gray-300" />
-          <h3 className="mt-4 text-xl font-semibold">Hôm nay không có lịch</h3>
-          <p className="mt-2">Bạn không có chuyến đi nào được phân công cho hôm nay.</p>
-        </div>
-      );
-    }
-
-    // Trạng thái CÓ CHUYẾN (Dùng .map để vẽ)
-    return (
-      <div className="space-y-6">
-        {trips.map((trip) => (
-          // Đây là 1 "Thẻ Chuyến Đi"
-          <div 
-            key={trip.trip_id}
-            onClick={() => handleTripClick(trip.trip_id)} // ⬅️ Bấm vào là chuyển trang
-            className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition-all duration-200 cursor-pointer"
-          >
-            {/* Tiêu đề Thẻ (Tên tuyến và Trạng thái) */}
-            <div className={`px-6 py-4 border-b rounded-t-xl ${
-              trip.status === 'ongoing' ? 'bg-yellow-50' : 'bg-gray-50'
-            }`}>
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-indigo-700">
-                  {trip.route_name || 'Chuyến đi'}
-                </h3>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  trip.status === 'ongoing' ? 'bg-yellow-200 text-yellow-800' : 
-                  trip.status === 'completed' ? 'bg-green-200 text-green-800' :
-                  trip.status === 'cancelled' ? 'bg-red-200 text-red-800' :
-                  'bg-gray-200 text-gray-800'
-                }`}>
-                  {/* Chuyển tên tiếng Anh sang tiếng Việt */}
-                  {trip.status === 'ongoing' ? 'Đang diễn ra' : 
-                   trip.status === 'completed' ? 'Đã hoàn thành' :
-                   trip.status === 'cancelled' ? 'Đã hủy' :
-                   'Chưa bắt đầu'}
-                </span>
-              </div>
-            </div>
+        if (res.data.status === 'success') {
+            // 3. Cập nhật giao diện ngay lập tức (Optimistic UI Update)
+            // Duyệt qua danh sách chuyến đi cũ, tìm chuyến vừa bấm và đổi status của nó
+            setTrips(prevTrips => prevTrips.map(trip => 
+                trip.trip_id === tripId ? { ...trip, status: 'ongoing' } : trip
+            ));
             
-            {/* Thông tin chi tiết Thẻ */}
-            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Cột 1: Giờ */}
-              <div className="flex items-center gap-3">
-                <FaRegClock className="text-blue-500" size={20} />
-                <div>
-                  <p className="text-sm text-gray-500">Giờ khởi hành</p>
-                  <p className="text-lg font-semibold text-gray-800">
-                    {formatTime(trip.departure_time)}
-                  </p>
-                </div>
-              </div>
-              {/* Cột 2: Tuyến */}
-              <div className="flex items-center gap-3">
-                <FaRoute className="text-green-500" size={20} />
-                <div>
-                  <p className="text-sm text-gray-500">Tuyến đường</p>
-                  <p className="text-lg font-semibold text-gray-800">
-                    {trip.route_name}
-                  </p>
-                </div>
-              </div>
-              {/* Cột 3: Xe */}
-              <div className="flex items-center gap-3">
-                <FaBus className="text-orange-500" size={20} />
-                <div>
-                  <p className="text-sm text-gray-500">Biển số xe</p>
-                  <p className="text-lg font-semibold text-gray-800">
-                    {trip.plate_number || 'Chưa gán xe'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+            // (Tùy chọn) Thông báo nhỏ
+            // alert("Đã bắt đầu chuyến xe!");
+        }
+        // navigate('/driver/routes', { state: {}})
+    } catch (error) {
+        console.error("Lỗi cập nhật trạng thái:", error);
+        alert("Lỗi kết nối Server. Vui lòng kiểm tra lại mạng hoặc Server.");
+    }
+    localStorage.setItem('tripId', tripId);
+    navigate(`/driver/routes`, { state: {
+        tripId: tripId
+    }});
   };
 
-  // === 5. JSX CHÍNH (LAYOUT) ===
+  // Helper: Format giờ
+  const formatTime = (isoString) => {
+      if (!isoString) return "--:--";
+      return new Date(isoString).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* 1. Sidebar (Đồng bộ) */}
-      <Sidebar userRole="driver" />
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar userRole="driver" />
+        {console.log("Driver Info:", driverInfo)}
+        {console.log("Trips Data:", trips)}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        <Header 
+            title="Lịch chạy hôm nay" 
+            subtitle={new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            userName={driverInfo.name}
+            userRole={driverInfo.role}
+        />
 
-      {/* 2. Main Content */}
-      <div className="flex-1">
-        {/* Header (Đồng bộ) */}
-        {/* Giả sử Header của em tự lấy thông tin user từ Context */}
-        <Header />
+        <div className="flex-1 overflow-y-auto p-6">
+            <div className="max-w-3xl mx-auto">
+                
+                {/* Card Thống kê nhỏ trên cùng */}
+                <div className="bg-white rounded-t-2xl shadow-sm border border-gray-200 p-6 pb-4 mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <FaCalendarDay />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-800">Lộ trình của bạn</h2>
+                            <p className="text-sm text-gray-500">
+                                Hôm nay có <span className="font-bold text-indigo-600">{trips.length}</span> chuyến xe
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-        {/* 3. Nội dung trang */}
-        <div className="p-6">
-          {/* Tiêu đề trang */}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Lịch Làm Việc Của Tôi</h1>
-            <p className="text-sm text-gray-500">
-              {getTodayDate()}
-            </p>
-          </div>
+                {/* Danh sách Lịch trình */}
+                {loading ? (
+                    <div className="text-center py-10">Đang tải dữ liệu...</div>
+                ) : trips.length === 0 ? (
+                    <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+                        <FaBus />
+                        <h3 className="text-gray-800 font-medium mt-2">Không có lịch chạy</h3>
+                        <p className="text-sm text-gray-500">Hôm nay bạn được nghỉ ngơi!</p>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        {trips.map((trip, index) => (
+                            <div key={trip.trip_id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                                
+                                {/* === PHẦN 1: THÔNG TIN CHUYẾN ĐI (Click vào để xem chi tiết) === */}
+                                <div className="p-5 cursor-pointer" onClick={() => navigate(`/driver/trip/${trip.trip_id}/students`)}>
+                                    
+                                    {/* Hàng 1: Trạng thái + Giờ chạy */}
+                                    <div className="flex justify-between items-center mb-4">
+                                        <StatusBadge status={trip.status} />
+                                        <div className="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-50 px-3 py-1 rounded-lg">
+                                            <FaClock />
+                                            {formatTime(trip.start_time)} - {formatTime(trip.end_time)}
+                                        </div>
+                                    </div>
 
-          {/* Phần hiển thị Lịch trình (đã gọi API) */}
-          <div className="mt-6">
-            {renderContent()}
-          </div>
+                                    {/* Hàng 2: Tên Tuyến */}
+                                    <h3 className="text-xl font-bold text-gray-800 mb-4">{trip.route_name}</h3>
+
+                                    {/* Hàng 3: Lộ trình (Điểm đi - Điểm đến) */}
+                                    <div className="space-y-4 relative pl-3 mb-5">
+                                        {/* Đường kẻ nối dọc */}
+                                        <div className="absolute left-[6px] top-2 bottom-2 w-0.5 border-l-2 border-dashed border-gray-300"></div>
+
+                                        {/* Điểm đi */}
+                                        <div className="flex items-start gap-3 relative z-10">
+                                            <FaMapMarkerAlt />
+                                            <div>
+                                                <p className="text-xs text-gray-400 font-bold uppercase">Điểm bắt đầu</p>
+                                                <p className="text-base font-medium text-gray-800">{trip.start_point}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Điểm đến */}
+                                        <div className="flex items-start gap-3 relative z-10">
+                                            <FaMapMarkerAlt />
+                                            <div>
+                                                <p className="text-xs text-gray-400 font-bold uppercase">Điểm kết thúc</p>
+                                                <p className="text-base font-medium text-gray-800">{trip.end_point}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Hàng 4: Biển số xe */}
+                                    <div className="inline-flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded text-sm text-gray-600 font-medium">
+                                        <FaBus /> Xe: <span className="text-gray-800 font-bold">{trip.plate_number}</span>
+                                    </div>
+                                </div>
+
+                                {/* === PHẦN 2: NÚT BẤM (Nằm riêng biệt ở dưới đáy - Footer) === */}
+                                <div className="p-4 bg-gray-50 border-t border-gray-200">
+                                    {trip.status === 'preparation' ? (
+                                        // TRƯỜNG HỢP 1: CHƯA CHẠY -> HIỆN NÚT BẮT ĐẦU
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Chặn click nhầm vào thẻ cha
+                                                handleStartTrip(trip.trip_id);
+                                            }}
+                                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-bold text-base flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95"
+                                        >
+                                            <FaPlay /> BẮT ĐẦU CHẠY
+                                        </button>
+                                    ) : trip.status === 'ongoing' ? (
+                                        // TRƯỜNG HỢP 2: ĐANG CHẠY -> HIỆN TRẠNG THÁI ĐỘNG
+                                        <div className="w-full bg-green-100 text-green-700 py-3 rounded-lg font-bold text-base flex items-center justify-center gap-2 cursor-default border border-green-200">
+                                            <span className="relative flex h-3 w-3 mr-1">
+                                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                                            </span>
+                                            XE ĐANG CHẠY...
+                                        </div>
+                                    ) : (
+                                        // TRƯỜNG HỢP 3: ĐÃ HOÀN THÀNH
+                                        <div className="w-full bg-gray-200 text-gray-500 py-3 rounded-lg font-bold text-base flex items-center justify-center gap-2 cursor-default">
+                                            <FaCheckCircle /> ĐÃ HOÀN THÀNH
+                                        </div>
+                                    )}
+                                </div>
+
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
-      </div>
-    </div>
-  );
+      </div>
+    </div>
+  );
 }
 
-export default DashboardTaixe;
+// Component hiển thị Badge trạng thái màu sắc
+const StatusBadge = ({ status }) => {
+    const config = {
+        preparation: { color: "bg-yellow-100 text-yellow-700 border-yellow-200", text: "Chuẩn bị" },
+        ongoing: { color: "bg-green-100 text-green-700 border-green-200", text: "Đang chạy" },
+        completed: { color: "bg-gray-100 text-gray-600 border-gray-200", text: "Hoàn thành" },
+        cancelled: { color: "bg-red-100 text-red-700 border-red-200", text: "Đã hủy" }
+    };
+    
+    const current = config[status] || config.preparation;
+
+    return (
+        <span className={`px-3 py-1 rounded text-xs font-bold uppercase border ${current.color}`}>
+            {current.text}
+        </span>
+    );
+};
+
+export default DashboardTaixeContent;

@@ -13,7 +13,7 @@ function Login() {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
   const navigate = useNavigate(); // Dùng để điều hướng
 
   const handleLogin = async (e) => {
@@ -23,19 +23,19 @@ function Login() {
     try {
       const response = await axios.post(API_URL, {
         email: email,
-        password: password,
-        role: role 
+        password: password
+        // role: role
       });
       if (response.data.status === "success") {
-        if (role === 'driver') {
+        if (response.data.data.role === 'driver') {
         const information = await axios.get(`http://localhost:5000/api/user/driver/${response.data.data.user_id}`);
         login(information.data.data);
         }
-        if (role === 'parent') {
+        if (response.data.data.role === 'parent') {
         const information = await axios.get(`http://localhost:5000/api/user/parent/${response.data.data.user_id}`);
         login(information.data.data);
         }
-        if (role === 'manager') {
+        if (response.data.data.role === 'manager') {
           login(response.data.data);
         }
         
@@ -77,15 +77,15 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <select onChange={(e) => setRole(e.target.value)}>
+        {/* <select onChange={(e) => setRole(e.target.value)}>
           <option value="">Chọn vai trò</option>
           <option value="manager">Quản lý</option>
           <option value="parent">Phụ huynh</option>
           <option value="driver">Tài xế</option>
-        </select>
-        <button type="submit" disabled={loading}  className="login-btn">
-          {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-        </button>
+        </select> */}
+         <button type="submit" disabled={loading}  className="login-btn">
+           {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+         </button>
 
         {/* <button type="button" className="forgot-btn">Quên mật khẩu</button> */}
       </form>

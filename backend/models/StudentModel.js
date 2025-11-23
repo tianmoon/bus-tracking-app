@@ -92,6 +92,65 @@ class StudentModel {
   //       throw error;
   //     }
   //   }
+  static async getByTripId(tripId) {
+    try {
+      /* LOGIC TRUY VẤN NÂNG CAO:
+         - Từ trip_id -> tìm assignment -> tìm bus_id.
+         - Từ bus_id -> tìm danh sách student.
+         - JOIN với bảng 'report' để xem học sinh đó trong chuyến đi này đã có trạng thái gì chưa (null, picked_up, dropped_off).
+      */
+      const query = `
+        SELECT 
+            st.student_id, 
+            st.name, 
+            st.grade, 
+            st.parent_id,
+            st.bus_id,
+            r.status as trip_status  -- Trạng thái điểm danh: 'picked_up', 'dropped_off' hoặc NULL
+        FROM trip tr
+        JOIN assignment asn ON tr.asn_id = asn.asn_id
+        JOIN student st ON st.bus_id = asn.bus_id    -- Logic: Bus của Trip trùng Bus của Student
+        LEFT JOIN report r ON r.student_id = st.student_id AND r.trip_id = tr.trip_id
+        WHERE tr.trip_id = ?
+      `;
+      
+      const [rows] = await db.query(query, [tripId]);
+      return rows;
+    } catch (error) {
+      throw new Error('Lỗi khi lấy danh sách học sinh theo chuyến đi: ' + error.message);
+    }
+  }
+
+  // 2. Cập nhật trạng thái (Insert hoặc Update vào bảng Report)
+ // 2. Cập nhật trạng thái (Logic kiểm tra kỹ: Có rồi thì Update, Chưa có thì Insert)
+  static async updateTripStatus(tripId, studentId, status) {
+    try {
+      // BƯỚC 1: Kiểm tra xem học sinh này trong chuyến đi này đã có dòng báo cáo nào chưa
+      const [existing] = await db.query(
+        "SELECT * FROM report WHERE trip_id = ? AND student_id = ?", 
+        [tripId, studentId]
+      );
+
+      if (existing.length > 0) {
+        // TRƯỜNG HỢP 1: Đã có -> Thực hiện UPDATE
+        await db.query(
+          "UPDATE report SET status = ?, timestamp = NOW() WHERE trip_id = ? AND student_id = ?",
+          [status, tripId, studentId]
+        );
+      } else {
+        // TRƯỜNG HỢP 2: Chưa có -> Thực hiện INSERT
+        await db.query(
+          "INSERT INTO report (trip_id, student_id, status, timestamp) VALUES (?, ?, ?, NOW())",
+          [tripId, studentId, status]
+        );
+      }
+      
+      return true;
+    } catch (error) {
+      throw new Error('Lỗi khi cập nhật trạng thái điểm danh: ' + error.message);
+    }
+  }
+
 }
 
 export default StudentModel;

@@ -22,6 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
 import Assignment from './pages/Assignment.jsx'
 import BusTrackingAdmin from './pages/BusTrackingAdmin'
+
 function App() {
   return(
     <div>
@@ -41,9 +42,9 @@ function App() {
         <Route path='/admin/tracking' element={<BusTrackingAdmin/>}/>
 
         {/* DRIVER ROUTES */}
-        <Route path='/driver/schedule' element={<DashboardTaixe/>}/>
-        <Route path='/driver/students' element={<StudentListForDriver/>}/>
-        <Route path='/driver/reports' element={<DriverTripReport/>}/>
+        <Route path='/driver/schedules' element={<DashboardTaixe/>}/>
+        <Route path="/driver/students" element={<StudentListForDriver />} />
+        <Route path='/driver/reports' element={<DriverTripReport/>}/> 
         <Route path='/driver/routes' element={<DriverRoute/>}/>
         <Route path='/driver/issues' element={<DriverCanhbao/>}/>
         
@@ -53,7 +54,7 @@ function App() {
         <Route path='/parent/child-info' element={<StudentInfoPH/>}/>
         {/* <Route path='/parent/alerts' element={<AlertManagement/>}/> */}
         {/* <Route path='/parent/messages' element={<MessageManagement/>}/> */}
-        <Route path='/parent/settings' element={<ParentSettings/>}/>
+        {/* <Route path='/parent/settings' element={<ParentSettings/>}/> */}
           
       </Routes>
 
@@ -63,4 +64,3 @@ function App() {
 }
 
 export default App
-

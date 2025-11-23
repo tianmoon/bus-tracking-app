@@ -156,7 +156,7 @@ const DriverForAdmin = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số điện thoại</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                   {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tuyến phụ trách</th> */}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th> */}
                 </tr>
               </thead>
             </table>
@@ -189,9 +189,9 @@ const DriverForAdmin = () => {
                         {/* {driver.plate_number ? 
                         (<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{driver.plate_number}</td>) : 
                         (<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Chưa có</td>)} */}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center gap-2">
-                            {/* <button
+                            <button
                             onClick={() => handleEdit(driver)}
                             className="text-blue-600 hover:text-blue-900 flex items-center gap-1 px-3 py-1 rounded hover:bg-blue-50 transition-colors"
                           >
@@ -204,13 +204,13 @@ const DriverForAdmin = () => {
                           >
                             <Trash2 className="w-4 h-4" />
                             Xóa
-                          </button> */}
+                          </button>
                             <button className="text-green-600 hover:text-green-900 flex items-center gap-1 px-3 py-1 rounded hover:bg-green-50 transition-colors">
                               <Mail className="w-4 h-4" />
                               Nhắn tin
                             </button>
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (

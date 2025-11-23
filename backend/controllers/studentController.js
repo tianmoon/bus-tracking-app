@@ -1,4 +1,4 @@
-import Student from '../models/studentModel.js';
+import Student from '../models/StudentModel.js';
 
 // Lấy tất cả học sinh
 export const getAllStudents = async (req, res) => {
@@ -83,4 +83,45 @@ export const createStudent = async (req, res) => {
         });
     }
 }
+export const getStudentsByTripId = async (req, res) => {
+    try {
+        const { tripId } = req.params;
+        const students = await Student.getByTripId(tripId);
+        
+        res.status(200).json({
+            status: 'success',
+            data: students,
+            message: 'Lấy danh sách học sinh theo chuyến đi thành công'
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+};
+
+// [POST] Điểm danh học sinh (Đón/Trả)
+export const updateStudentTripStatus = async (req, res) => {
+    try {
+        const { tripId, studentId, status } = req.body;
+
+        // Validate status
+        if (!['picked_up', 'dropped_off'].includes(status)) {
+            return res.status(400).json({ status: 'fail', message: 'Trạng thái không hợp lệ' });
+        }
+
+        await Student.updateTripStatus(tripId, studentId, status);
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Cập nhật trạng thái thành công'
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+};
 

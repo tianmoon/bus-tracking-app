@@ -2,7 +2,7 @@ import {
     getAllAssignments,
     getAssignmentById,
     createAssignment,
-    updateAssignment
+    updateAssignment,  
 } from "../controllers/assignmentController.js";
 
 import { Router } from "express";

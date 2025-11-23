@@ -135,7 +135,7 @@ function Assignment() {
             handleCloseModal();
         } catch (error) {
             console.error('Error saving assignment:', error);
-            toast.error('Lỗi khi lưu phân công');
+            toast.error('Lỗi khi lưu phân công: ' + error.response?.data?.message);
         }
     }
 

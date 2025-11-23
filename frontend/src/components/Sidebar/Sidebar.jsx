@@ -12,21 +12,21 @@ function Sidebar(props) {
       { icon: Calendar, label: 'Lịch trình', path: '/admin/schedules' },
       { icon: ClipboardPlus, label: 'Phân công', path: '/admin/assignments' },
       { icon: MessageSquare, label: 'Tin nhắn', path: '/admin/messages' },
-      { icon: AlertTriangle, label: 'Cảnh báo', path: '/admin/alerts' },
+      // { icon: AlertTriangle, label: 'Cảnh báo', path: '/admin/alerts' },
       { icon: Map, label: 'Bản đồ theo dõi', path: '/admin/tracking' },
     ],
 
     parent: [
       { icon: Calendar, label: 'Lịch trình con', path: '/parent/child-info' },
-      { icon: Map, label: 'Vị trí xe', path: '/parent/map' },
-      { icon: MessageSquare, label: 'Tin nhắn', path: '/parent/messages' },
-      { icon: AlertTriangle, label: 'Cảnh báo', path: '/parent/alerts' },
-      { icon: Settings, label: 'Cài đặt', path: '/parent/settings' },
+      // { icon: Map, label: 'Vị trí xe', path: '/parent/map' },
+      // { icon: MessageSquare, label: 'Tin nhắn', path: '/parent/messages' },
+      // { icon: AlertTriangle, label: 'Cảnh báo', path: '/parent/alerts' },
+      // { icon: Settings, label: 'Cài đặt', path: '/parent/settings' },
     ],
 
     driver: [
       { icon: Route, label: 'Tuyến của tôi', path: '/driver/routes' },
-      { icon: Calendar, label: 'Ca làm việc', path: '/driver/schedule' },
+      { icon: Calendar, label: 'Ca làm việc', path: '/driver/schedules' },
       { icon: MessageSquare, label: 'Báo cáo', path: '/driver/reports' },
       { icon: AlertTriangle, label: 'Sự cố', path: '/driver/issues' },
       { icon: Users, label: 'Học sinh', path: '/driver/students' },

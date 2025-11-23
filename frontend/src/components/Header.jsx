@@ -17,8 +17,19 @@ function Header() {
         navigate('/');
     };
 
+    
+
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
+    };
+
+    const mapRoleToVietnamese = (role) => {
+        const roleMap = {
+            manager: "Quản trị viên",
+            driver: "Tài xế",
+            parent: "Phụ huynh"
+        };
+        return roleMap[role] || "Không xác định";
     };
 
     return (
@@ -26,7 +37,7 @@ function Header() {
             <div className="bg-white border-b px-6 py-4">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800">Dashboard Quản lý</h1>
+                        <h1 className="text-2xl font-bold text-gray-800">Dashboard {mapRoleToVietnamese(user?.role)}</h1>
                         <p className="text-sm text-gray-500">Tổng quan hệ thống xe buýt trường học</p>
                     </div>
                     <div className="flex items-center gap-4">

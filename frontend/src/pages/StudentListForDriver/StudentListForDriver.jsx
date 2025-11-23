@@ -1,182 +1,126 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Dùng để chuyển trang nếu chưa đăng nhập
-import { Bell, Bus, User, CheckCircle } from 'lucide-react';
+import React, { useEffect, useState, useContext } from 'react';
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
+import Header from '../../components/Header.jsx';
 import axios from 'axios';
+import { AppContext } from '../../context/AppContext';
+import { ChevronDown, ChevronUp, Bus, MapPin, CheckCircle } from 'lucide-react';
+import { toast } from 'react-toastify';
 
-// ⚠️ IMPORT HEADER COMPONENT CỦA EM Ở ĐÂY
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Header from "../../components/Header"; 
-
-function StudentListForDriver() {
-    const navigate = useNavigate();
-
-    // --- STATE ---
-    const [loading, setLoading] = useState(true);
+// --- COMPONENT CON: HIỂN THỊ HỌC SINH CỦA 1 CHUYẾN ---
+const TripStudentList = ({ tripId }) => {
     const [students, setStudents] = useState([]);
-    const [driverInfo, setDriverInfo] = useState({ name: "Tài xế", role: "Đang tải..." });
-    const [currentTripId, setCurrentTripId] = useState(null); // Lưu Trip ID tìm được
+    const [loading, setLoading] = useState(true);
 
-    // --- LOGIC API ---
     useEffect(() => {
-        const fetchAllData = async () => {
+        const fetchStudents = async () => {
             try {
-                // 1. LẤY USER ID AN TOÀN (Giống trang Route)
-                const getUserId = () => {
-                    const direct = localStorage.getItem('user_id');
-                    if (direct) return direct;
-                    try {
-                        const userObj = JSON.parse(localStorage.getItem('user'));
-                        return userObj?.user_id || userObj?.id;
-                    } catch(e) { return null; }
-                };
-                const userId = getUserId();
-                
-                if (!userId) {
-                    navigate('/login');
-                    return;
-                }
-                const config = { headers: { 'x-user-id': userId } };
-
-                // A. LẤY PROFILE (Để hiện tên lên Header)
-                try {
-                    const profileRes = await axios.get('http://localhost:3000/api/driver-app/profile/me', config);
-                    setDriverInfo({ 
-                        name: profileRes.data.data.name, 
-                        role: "Tài xế xe buýt" 
-                    });
-                } catch (e) { console.error("Lỗi profile", e); }
-
-                // B. TÌM CHUYẾN ĐI HÔM NAY
-                const scheduleRes = await axios.get('http://localhost:3000/api/driver-app/trips/today', config);
-                const trips = scheduleRes.data.data;
-
-                if (trips && trips.length > 0) {
-                    const tripId = trips[0].trip_id; 
-                    setCurrentTripId(tripId); // Lưu Trip ID
-
-                    // C. LẤY DANH SÁCH HỌC SINH
-                    const detailRes = await axios.get(`http://localhost:3000/api/driver-app/trip/details/${tripId}`, config);
-                    setStudents(detailRes.data.data.students);
-                } else {
-                    setStudents([]);
-                }
-
-            } catch (err) {
-                console.error("Lỗi tải dữ liệu:", err);
-            } finally {
-                setLoading(false);
-            }
+                const res = await axios.get(`http://localhost:5000/api/students/trip/${tripId}`);
+                if (res.data.status === 'success') setStudents(res.data.data);
+            } catch (err) { console.error(err); } 
+            finally { setLoading(false); }
         };
-        fetchAllData();
-    }, [navigate]);
+        fetchStudents();
+    }, [tripId]);
 
-    // 2. Xử lý điểm danh
-    const handlePickup = async (studentId) => {
-        if (!currentTripId) return; // Không có chuyến thì không điểm danh
-
+    const handleStatusUpdate = async (studentId, nextStatus) => {
         try {
-            await axios.post('http://localhost:3000/api/driver-app/report/status', {
-                trip_id: currentTripId, // Dùng Trip ID vừa tìm được
-                student_id: studentId,
-                status: 'picked_up'
-            }, {
-                headers: { 'x-user-id': localStorage.getItem('user_id') }
+            await axios.post('http://localhost:5000/api/students/status', {
+                tripId, studentId, status: nextStatus
             });
-
-            // Cập nhật giao diện ngay lập tức
-            setStudents(prev => prev.map(s => 
-                s.student_id === studentId ? { ...s, current_status: 'picked_up' } : s
-            ));
-        } catch (error) {
-            alert("Lỗi cập nhật: " + (error.response?.data?.message || error.message));
-        }
+            setStudents(prev => prev.map(s => s.student_id === studentId ? { ...s, trip_status: nextStatus } : s));
+            toast.success("Đã cập nhật trạng thái!");
+        } catch (e) { toast.error("Lỗi cập nhật"); }
     };
 
-    // --- RENDER CONTENT ---
-    const renderTableContent = () => {
-        if (loading) return <p className="p-6 text-center text-gray-500">Đang tải danh sách học sinh...</p>;
-        
-        if (students.length === 0) {
-            return (
-                <div className="text-center py-12 text-gray-500">
-                    <User size={32} className="mx-auto mb-3" />
-                    <p>{currentTripId ? "Không có học sinh nào trên chuyến này." : "Bạn chưa có chuyến đi hôm nay."}</p>
-                    <button onClick={() => window.location.reload()} className="mt-3 text-indigo-600 hover:underline">Tải lại</button>
-                </div>
-            );
-        }
+    if (loading) return <p className="text-sm text-gray-500 p-4">Đang tải danh sách...</p>;
+    if (students.length === 0) return <p className="text-sm text-gray-500 p-4">Không có học sinh.</p>;
 
-        return (
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className="bg-indigo-600 text-white">
-                        <tr>
-                            <th className="px-6 py-4 text-left font-semibold">Id</th>
-                            <th className="px-6 py-4 text-left font-semibold">Tên</th>
-                            <th className="px-6 py-4 text-left font-semibold">Lớp</th>
-                            <th className="px-6 py-4 text-left font-semibold">Trạng thái</th>
-                            <th className="px-6 py-4 text-left font-semibold">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student) => (
-                            <tr key={student.student_id} className="border-b hover:bg-gray-50">
-                                <td className="px-6 py-4">{student.student_id}</td>
-                                <td className="px-6 py-4 font-medium">{student.name}</td>
-                                <td className="px-6 py-4">{student.grade}</td>
-                                <td className="px-6 py-4">
-                                    {student.current_status === 'picked_up' ? (
-                                        <span className="text-green-600 font-bold">Đã lên xe</span>
-                                    ) : (
-                                        <span className="text-gray-400 italic">Chưa đón</span>
-                                    )}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {student.current_status !== 'picked_up' ? (
-                                        <button 
-                                            onClick={() => handlePickup(student.student_id)}
-                                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">
-                                            Xác nhận đón
-                                        </button>
-                                    ) : (
-                                        <span className="text-green-600 flex items-center gap-1">
-                                            <CheckCircle size={16} /> Hoàn tất
-                                        </span>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+    return (
+        <div className="border-t border-gray-100 bg-gray-50 p-4 space-y-3">
+            {students.map(st => (
+                <div key={st.student_id} className="flex justify-between items-center bg-white p-3 rounded shadow-sm">
+                    <div>
+                        <p className="font-bold text-gray-800">{st.name}</p>
+                        <p className="text-xs text-gray-500">Lớp: {st.grade}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        {!st.trip_status && (
+                            <button onClick={() => handleStatusUpdate(st.student_id, 'picked_up')} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded text-sm font-bold">Đón</button>
+                        )}
+                        {st.trip_status === 'picked_up' && (
+                            <button onClick={() => handleStatusUpdate(st.student_id, 'dropped_off')} className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm font-bold">Trả</button>
+                        )}
+                        {st.trip_status === 'dropped_off' && (
+                            <span className="text-green-600 text-sm font-bold flex items-center gap-1"><CheckCircle size={14}/> Xong</span>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// --- COMPONENT CHÍNH ---
+function StudentListForDriver() {
+    const { user } = useContext(AppContext);
+    const [trips, setTrips] = useState([]);
+    const [expandedTripId, setExpandedTripId] = useState(null);
+
+    useEffect(() => {
+        if (!user) return;
+        // Lấy danh sách chuyến đi hôm nay
+        axios.get('http://localhost:5000/api/trips/driver/today', { headers: { 'x-user-id': user.user_id } })
+            .then(res => setTrips(res.data.data))
+            .catch(err => console.error(err));
+    }, [user]);
+
+    const toggleTrip = (id) => {
+        setExpandedTripId(expandedTripId === id ? null : id);
     };
 
     return (
         <div className="flex min-h-screen bg-gray-50">
-            {/* A. Sidebar */}
-            <Sidebar userRole='driver'/>
-
+            <Sidebar userRole='driver' />
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                {/* B. Header (Tái sử dụng Component) */}
-                <Header 
-                    title="Học sinh" 
-                    subtitle="Tổng quan danh sách học sinh"
-                    userName={driverInfo.name} 
-                    userRole={driverInfo.role} 
-                />
-
+                <Header title="Danh sách Học sinh" userRole="Tài xế" />
                 <div className="flex-1 overflow-y-auto p-6">
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div className="bg-white border-b px-6 py-4">
-                            <h2 className="text-xl font-semibold">Danh sách học sinh trên xe</h2>
-                        </div>
-                        {/* C. Nội dung bảng (Đã fix) */}
-                        {renderTableContent()}
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">Các chuyến đi hôm nay</h2>
+                    
+                    <div className="space-y-4 max-w-3xl">
+                        {trips.map(trip => (
+                            <div key={trip.trip_id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                                {/* Header của Card Trip - Bấm vào để mở rộng */}
+                                <div 
+                                    onClick={() => toggleTrip(trip.trip_id)}
+                                    className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                            <Bus size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-800">{trip.route_name}</h3>
+                                            <p className="text-xs text-gray-500">
+                                                {new Date(trip.departure_time).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {expandedTripId === trip.trip_id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                                </div>
+
+                                {/* Phần nội dung danh sách học sinh (Sổ ra khi bấm) */}
+                                {expandedTripId === trip.trip_id && (
+                                    <TripStudentList tripId={trip.trip_id} />
+                                )}
+                            </div>
+                        ))}
+                        
+                        {trips.length === 0 && <p className="text-center text-gray-500">Hôm nay không có chuyến nào.</p>}
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
 export default StudentListForDriver;

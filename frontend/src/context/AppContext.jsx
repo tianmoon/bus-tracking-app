@@ -32,7 +32,7 @@ export const AppContextProvider = (props) => {
     const logout = () => {
         setUser(null);
         setIsAuthenticated(false);
-        localStorage.removeItem('user');
+        localStorage.clear();
     };
 
     const value = {
