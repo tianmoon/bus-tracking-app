@@ -38,3 +38,23 @@ export const getBusStopByIdRoute = async (req, res) => {
         })
     }
 }
+
+// Get route info by id
+export const getRouteById = async (req, res) => {
+    try {
+        const routeId = req.params.id;
+        const routeInfo = await Route.getRouteByTripId(routeId);
+        res.status(200).json({
+            status: 'success',
+            data: routeInfo,
+            message: 'Lấy thông tin tuyến đường thành công'
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+            code: 500
+        })
+    }
+}

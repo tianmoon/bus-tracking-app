@@ -55,7 +55,7 @@ class ParentModel {
     static async getStudentsByParentId(parent_id) {
         try {
             const [rows] = await db.query(
-                `SELECT st.student_id, st.name, st.grade, b.plate_number
+                `SELECT st.student_id, st.name, st.grade, b.plate_number, b.bus_id
                 FROM student st
                 LEFT JOIN parent pa ON pa.parent_id = st.parent_id
                 LEFT JOIN bus b ON b.bus_id = st.bus_id

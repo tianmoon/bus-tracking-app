@@ -96,6 +96,8 @@ function DriverTripReport() {
             toast.success("Đã hoàn thành chuyến đi!");
             // Cập nhật UI
             setTrips(prev => prev.map(t => t.trip_id === tripId ? { ...t, status: 'completed' } : t));
+            // Xóa cache liên quan nếu có
+            localStorage.removeItem('tripId');
         } catch (error) {
             toast.error("Lỗi hệ thống.");
         }

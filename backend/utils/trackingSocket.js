@@ -35,6 +35,24 @@ export const initializeTrackingSocket = (io) => {
       console.log(`Bus ${bus_id} location updated: ${latitude}, ${longitude}`);
     });
 
+    // Driver thông báo đến trạm
+    socket.on('bus-arrival', (data) => {
+      const { trip_id, bus_id, plate_number, stop_name, stop_index, total_stops } = data;
+      
+      // Broadcast thông báo đến tất cả parent/admin
+      io.emit('bus-arrival', {
+        trip_id,
+        bus_id,
+        plate_number,
+        stop_name,
+        stop_index,
+        total_stops,
+        timestamp: new Date()
+      });
+
+      console.log(`Bus ${plate_number} arrived at ${stop_name} (${stop_index}/${total_stops})`);
+    });
+
     // Admin/Parent yêu cầu vị trí hiện tại của bus
     socket.on('request-location', (bus_id) => {
       const location = busLocations.get(bus_id);
