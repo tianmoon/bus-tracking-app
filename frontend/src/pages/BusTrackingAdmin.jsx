@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -54,37 +54,82 @@ function BusTrackingAdmin() {
         }
     };
 
-    // Lắng nghe vị trí bus realtime
+    // Setup socket connection
     useEffect(() => {
-        socket.on('location-update', (data) => {
-            if (selectedTrip && data.trip_id === selectedTrip.trip_id) {
-                setBusLocation({
-                    lat: data.latitude,
-                    lng: data.longitude,
-                    speed: data.speed,
-                    heading: data.heading
-                });
-                
-                // Lưu lịch sử di chuyển
-                setLocationHistory(prev => [...prev, [data.latitude, data.longitude]]);
-            }
+        console.log('Socket connecting...');
+        
+        socket.on('connect', () => {
+            console.log('Socket connected:', socket.id);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Socket disconnected');
         });
 
         return () => {
-            socket.off('location-update');
+            socket.off('connect');
+            socket.off('disconnect');
         };
-    }, [selectedTrip]);
+    }, []);
+
+    // Lắng nghe vị trí bus realtime
+    useEffect(() => {
+        console.log('Setting up location-update listener');
+        
+        const handleLocationUpdate = (data) => {
+            console.log('Received location-update:', data);
+            console.log('Data fields:', {
+                latitude: data.latitude,
+                longitude: data.longitude,
+                speed: data.speed,
+                heading: data.heading
+            });
+            
+            // Kiểm tra data hợp lệ
+            if (data.latitude && data.longitude) {
+                const newLocation = {
+                    lat: data.latitude,
+                    lng: data.longitude,
+                    speed: data.speed || 0,
+                    heading: data.heading || 0,
+                    trip_id: data.trip_id,
+                    bus_id: data.bus_id
+                };
+                
+                console.log('Setting busLocation:', newLocation);
+                setBusLocation(newLocation);
+                
+                // Lưu lịch sử di chuyển
+                setLocationHistory(prev => {
+                    const updated = [...prev, [data.latitude, data.longitude]];
+                    console.log('Location history updated, length:', updated.length);
+                    return updated;
+                });
+            } else {
+                console.error('Invalid location data:', data);
+            }
+        };
+
+        socket.on('location-update', handleLocationUpdate);
+
+        return () => {
+            socket.off('location-update', handleLocationUpdate);
+        };
+    }, []); // Không phụ thuộc vào selectedTrip
 
     useEffect(() => {
         fetchTrips();
     }, []);
 
     const handleTrack = (trip) => {
+        console.log('Tracking trip:', trip);
         setSelectedTrip(trip);
         setIsOpen(true);
         setLocationHistory([]);
+        setBusLocation(null);
         
         // Request vị trí hiện tại của bus
+        console.log('Requesting location for bus_id:', trip.bus_id);
         socket.emit('request-location', trip.bus_id);
     };
 
@@ -233,7 +278,7 @@ function BusTrackingAdmin() {
                                             </div>
                                         </>
                                     )}
-
+                                    {console.log(busLocation)}
                                     {!busLocation && (
                                         <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
                                             <p className="text-yellow-800 text-sm">

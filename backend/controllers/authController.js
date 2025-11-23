@@ -4,7 +4,7 @@ let loggedInUsers = {}; // Map để lưu trữ trạng thái đăng nhập củ
 
 export const login = async (req, res) => {
     try {
-        const { email, password, role } = req.body;
+        const { email, password } = req.body;
 
         if (!email) {
             return res.status(400).json({
@@ -30,17 +30,17 @@ export const login = async (req, res) => {
             });
         }
 
-        if (!role) {
-            return res.status(400).json({
-                status: 'fail',
-                message: 'Vui lòng chọn vai trò',
-                code: 400
-            });
-        }
+        // if (!role) {
+        //     return res.status(400).json({
+        //         status: 'fail',
+        //         message: 'Vui lòng chọn vai trò',
+        //         code: 400
+        //     });
+        // }
 
         const [rows] = await db.query(
-            'SELECT * FROM user WHERE email = ? AND password = ? AND role = ?',
-            [email, password, role]
+            'SELECT * FROM user WHERE email = ? AND password = ?',
+            [email, password]
         );
 
         const user = rows[0];

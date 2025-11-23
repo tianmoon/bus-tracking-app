@@ -55,10 +55,10 @@ export const getScheduleById = async (req, res) => {
 export const createSchedule = async (req, res) => {
     try {
         const scheduleData = req.body;
-        if (!scheduleData.route_id || !scheduleData.start_time || !scheduleData.end_time || !scheduleData.day_of_week) {
+        if (!scheduleData.route_id || !scheduleData.start_time || !scheduleData.end_time ) {
             return res.status(400).json({
                 status: 'fail',
-                message: 'Thiếu thông tin bắt buộc: route_id, start_time, end_time, day_of_week',
+                message: 'Thiếu thông tin bắt buộc: route_id, start_time, end_time',
                 code: 400
             });
         }

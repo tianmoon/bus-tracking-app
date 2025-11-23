@@ -231,6 +231,7 @@ function AdminLichtrinh() {
                 describe: formData.description,
                 day_of_week: dayOfWeek,
             };
+            console.log('Dữ liệu lịch trình gửi đi:', scheduleData);
 
             if (editingTask) {
                 // Cập nhật lịch trình

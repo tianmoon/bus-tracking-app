@@ -98,6 +98,10 @@ function DashboardTaixeContent() {
         console.error("Lỗi cập nhật trạng thái:", error);
         alert("Lỗi kết nối Server. Vui lòng kiểm tra lại mạng hoặc Server.");
     }
+    localStorage.setItem('tripId', tripId);
+    navigate(`/driver/routes`, { state: {
+        tripId: tripId
+    }});
   };
 
   // Helper: Format giờ
