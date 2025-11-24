@@ -22,6 +22,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminCanhBao from './pages/AdminCanhBao/AdminCanhBao'
 import Assignment from './pages/Assignment.jsx'
 import BusTrackingAdmin from './pages/BusTrackingAdmin'
+import ParentForAdmin from './pages/ParentForAdmin.jsx'
 
 function App() {
   return(
@@ -40,6 +41,7 @@ function App() {
         <Route path='/admin/alerts' element={<AdminCanhBao/>}/>
         <Route path='/admin/assignments' element={<Assignment/>}/>
         <Route path='/admin/tracking' element={<BusTrackingAdmin/>}/>
+        <Route path='/admin/parents' element={<ParentForAdmin/>}/>
 
         {/* DRIVER ROUTES */}
         <Route path='/driver/schedules' element={<DashboardTaixe/>}/>
