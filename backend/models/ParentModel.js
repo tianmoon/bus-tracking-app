@@ -2,6 +2,20 @@ import db from '../config/database.js';
 
 class ParentModel {
 
+    // Check identification đã tồn tại chưa
+    static async isIdentificationExists(identification) {
+        try {
+            const [rows] = await db.query(
+                'SELECT * FROM parent WHERE identification = ?',
+                [identification]
+            );
+            return rows[0];
+        }
+        catch (error) {
+            throw new Error('Lỗi khi kiểm tra identification trong cơ sở dữ liệu');
+        }
+    }
+
     // Lấy tất cả phụ huynh
     static async getAll() {
         try {

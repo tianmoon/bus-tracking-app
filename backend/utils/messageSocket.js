@@ -3,12 +3,12 @@ import Message from "../models/MessageModel.js";
 // Socket.IO message handling
 export const initializeMessageSocket = (io) => {
   io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+    console.log('Message connected:', socket.id);
 
     // Join room theo role (parent, driver, admin)
     socket.on('join-room', (room) => {
       socket.join(room);
-      console.log(`Socket ${socket.id} joined room: ${room}`);
+      console.log(`Socket message: ${socket.id} joined room: ${room}`);
     });
 
     // Nhận tin nhắn từ admin và broadcast đến nhóm
@@ -39,7 +39,7 @@ export const initializeMessageSocket = (io) => {
     });
 
     socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+      console.log('Message disconnected:', socket.id);
     });
   });
 };
