@@ -135,7 +135,7 @@ function DriverRoute() {
       if (watchIdRef.current) {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
-      socket.disconnect();
+      // socket.disconnect();
     };
   }, []);
 

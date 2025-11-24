@@ -62,23 +62,7 @@ app.get('/', (req, res) => {
 // --- QUAN TRỌNG: Cấu hình Socket để Controller có thể gọi được ---
 app.set('io', io); 
 
-// --- QUAN TRỌNG: Xử lý Logic Join Room trực tiếp tại đây để đảm bảo kết nối ---
-io.on("connection", (socket) => {
-  // Log khi có người kết nối
-  console.log(`⚡ Client connected: ${socket.id}`);
-
-  // Lắng nghe sự kiện xin vào phòng từ Frontend (Driver/Parent/Admin)
-  socket.on("join-room", (room) => {
-    socket.join(room); // Cho socket này vào phòng
-    console.log(`✅ User ${socket.id} joined room: ${room}`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`❌ Client disconnected: ${socket.id}`);
-  });
-});
-
-// Initialize other Socket.IO handlers (Nếu trong này chưa có logic join-room)
+// Initialize Socket.IO handlers một lần duy nhất
 initializeMessageSocket(io);
 initializeTrackingSocket(io);
 initializeNotificationSocket(io);
