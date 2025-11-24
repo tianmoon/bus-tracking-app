@@ -61,6 +61,16 @@ export const createParent = async (req, res) => {
             );
         }
 
+        if (await Parent.isIdentificationExists(parentData.identification)) {
+            return res.status(400).json(
+                {
+                    status: 'fail',
+                    message: 'Căn cước công dân đã tồn tại trong hệ thống',
+                    code: 400
+                }
+            );
+        }
+
         const newParent = await createParentService(parentData);
         res.status(201).json({
             status: 'success',
